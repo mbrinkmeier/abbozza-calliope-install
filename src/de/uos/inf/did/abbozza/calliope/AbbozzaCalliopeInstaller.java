@@ -6,30 +6,23 @@
 package de.uos.inf.did.abbozza.calliope;
 
 import de.uos.inf.did.abbozza.AbbozzaLocale;
-import de.uos.inf.did.abbozza.AbbozzaLogger;
 import de.uos.inf.did.abbozza.AbbozzaServer;
 import de.uos.inf.did.abbozza.install.InstallTool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JTextPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.Document;
 
 /**
@@ -369,17 +362,18 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         /**
          * 7th step: copy jars and script from installerJar to their locations
          */
-        // installerJar = new JarFile(installerFile);
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/lib/jssc-2.8.0.jar"));
         installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", abbozzaDir + "/lib/jssc-2.8.0.jar");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/lib/srecord/"));
+        installTool.copyDirFromJar(installerJar, "lib/srecord/", abbozzaDir + "/lib/srecord/");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/build/"));
         installTool.copyDirFromJar(installerJar, "build/", abbozzaDir + "/build/");
-        // installTool.copyDirFromJar(installerJar, "lib/calliope.zip", abbozzaDir + "/build/calliope.zip");
-        // installTool.copyDirFromJar(installerJar, "lib/microbit.zip", abbozzaDir + "/build/microbit.zip");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozzaC.sh"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozzaC.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", abbozzaDir + "/abbozzaC.sh");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozzaMicroPython.sh"));
+        installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", abbozzaDir + "/abbozzaC.bat");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozzaMicroPython.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", abbozzaDir + "/abbozzaMicroPython.sh");
+        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", abbozzaDir + "/abbozzaMicroPython.bat");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozza_icon.png"));
         installTool.copyFromJar(installerJar, "lib/abbozza_icon.png", abbozzaDir + "/lib/abbozza_icon.png");
  
@@ -393,6 +387,42 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
                 "abbozza! Calliope MicroPython",
                 abbozzaDir + "/abbozzaMicroPython.sh", abbozzaDir + "/lib/abbozza_icon.png", false);
+
+        /**
+         * Write configuration file
+         */        
+        Properties config = new Properties();
+        config.setProperty("freshInstall", "true");
+        config.setProperty("browserPath", browserField.getText() );
+        config.setProperty("installPath", this.installField.getText() );
+        
+        File prefFile = new File(System.getProperty("user.home") + "/.abbozza/calliope/abbozza.cfg");
+        try {            
+            prefFile.getParentFile().mkdirs();
+            prefFile.createNewFile();
+
+            config.store(new FileOutputStream(prefFile), "abbozza! preferences");
+            addMsg(msgDoc,AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            this.setVisible(false);
+            System.exit(1);
+        }
+
+        prefFile = new File(System.getProperty("user.home") + "/.abbozza/calliopeC/abbozza.cfg");
+        try {            
+            prefFile.getParentFile().mkdirs();
+            prefFile.createNewFile();
+
+            config.store(new FileOutputStream(prefFile), "abbozza! preferences");
+            addMsg(msgDoc,AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()));
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            this.setVisible(false);
+            System.exit(1);
+        }
 
         /**
          * 9th step:
@@ -537,8 +567,17 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
      * Check if yotta is installed
      */
     private boolean checkPrerequisites() {
+        if (installTool.getSystem().equals("Win")) {
+            return checkPrerequisitesWin();
+        }
+        return checkPrerequisitesLinux();
+    }
+    
+    
+    private boolean checkPrerequisitesLinux() {
         try {
-            Process proc = Runtime.getRuntime().exec("yt --version");
+            ProcessBuilder procBuilder  = new ProcessBuilder("yt","--version");
+            Process proc = procBuilder.start();            
             proc.waitFor();
         } catch (IOException ex) {
             int opt = JOptionPane.showConfirmDialog(this,
@@ -553,6 +592,31 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         return true;
     }
 
+    private boolean checkPrerequisitesWin() {
+        String yottaPath = System.getenv("YOTTA_PATH");
+        String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
+        try {
+            ProcessBuilder procBuilder  = new ProcessBuilder("yt","--version");
+            procBuilder.directory(new File(yottaInstall+"\\workspace\\Scripts\\"));
+            procBuilder.inheritIO();
+            Process proc = procBuilder.start();            
+            proc.waitFor();
+        } catch (IOException ex) {
+            ex.printStackTrace(System.out);
+            int opt = JOptionPane.showConfirmDialog(this,
+                    AbbozzaLocale.entry("ERR.YOTTA_MISSING") + "\n"
+                    + AbbozzaLocale.entry("MSG.CONTINUE_INSTALLATION"),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.YES_NO_OPTION);
+            if (opt == JOptionPane.YES_OPTION) {
+                return false;
+            }
+        } catch (InterruptedException ex) {
+        }
+        return true;
+    }
+    
+    
+    
     private void addMsg(Document msgDoc, String text) {
         try {
             msgDoc.insertString(msgDoc.getLength(), text + "\n", null);

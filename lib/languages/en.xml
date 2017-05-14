@@ -33,5 +33,5 @@ The abbozza! Team </msg>
     <msg id="MSG.COMPILE_MICROBIT">... compiling for micro:bit</msg>
     <msg id="MSG.COMPILE_FAILED">... compilation failed (check access to http://github.com)</msg>
     <msg id="MSG.COMPILE_SUCCESS">... compilation finished</msg>
-
+    <msg id="MSG.WRITING_CONFIGURATION">... writing config file #</msg>    
 </language>
