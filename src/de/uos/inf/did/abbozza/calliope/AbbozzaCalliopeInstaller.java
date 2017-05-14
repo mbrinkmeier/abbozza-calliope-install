@@ -18,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -34,7 +36,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     // private String toolsDir;
     private String abbozzaDir;
     public Properties prefs;
-    private String installDir;
+    private File installDir;
     private InstallTool installTool;
     private boolean isAdmin;
     private JarFile installerJar;
@@ -266,7 +268,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
                 
-        File installDir = new File(installField.getText());
+        installDir = new File(installField.getText());
         File browserFile = new File(browserField.getText());
         boolean yottaInstalled = true;
         
@@ -431,39 +433,21 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         if ( yottaInstalled ) {
             int opt = JOptionPane.showConfirmDialog(this, "Precompile for Calliope MINI?\n(Requires internet connection)", "Precompilation", JOptionPane.YES_NO_OPTION);
             if ( opt == JOptionPane.YES_OPTION) {
-                try {
-                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_CALLIOPE"));                    
-                    ProcessBuilder procBuilder = new ProcessBuilder("yt","-n","build");
-                    procBuilder.directory(new File(abbozzaDir + "/build/calliope/"));
-                    procBuilder.inheritIO();
-                    Process proc = procBuilder.start();
-                    proc.waitFor();
-                    if ( proc.exitValue() != 0 ) {
-                        addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
-                    } else {
-                        addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
-                    }
-                } catch (IOException ex) {
-                } catch (InterruptedException ex) {
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_CALLIOPE"));                    
+                if ( build(abbozzaDir + "/build/calliope/" ) != 0 ) {
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
+                } else {
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
                 }
             }
             
             opt = JOptionPane.showConfirmDialog(this, "Precompile for micro:bit?\n(Requires internet connection)", "Precompilation", JOptionPane.YES_NO_OPTION);
             if ( opt == JOptionPane.YES_OPTION) {
-                try {
-                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_MICROBIT"));
-                    ProcessBuilder procBuilder = new ProcessBuilder("yt","-n","build");
-                    procBuilder.directory(new File(abbozzaDir + "/build/microbit/"));
-                    procBuilder.inheritIO();
-                    Process proc = procBuilder.start();
-                    proc.waitFor();
-                    if ( proc.exitValue() != 0 ) {
-                        addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
-                    } else {
-                        addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
-                    }
-                } catch (IOException ex) {
-                } catch (InterruptedException ex) {
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_MICROBIT"));                    
+                if ( build(abbozzaDir + "/build/microbit/" ) != 0 ) {
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
+                } else {
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
                 }
             }
         }
@@ -596,8 +580,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         String yottaPath = System.getenv("YOTTA_PATH");
         String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
         try {
-            ProcessBuilder procBuilder  = new ProcessBuilder("yt","--version");
-            procBuilder.directory(new File(yottaInstall+"\\workspace\\Scripts\\"));
+            ProcessBuilder procBuilder  = new ProcessBuilder(yottaInstall+"\\workspace\\Scripts\\yt","--version");
+            procBuilder.environment().put("PATH",yottaPath + ";" + System.getenv("PATH"));
             procBuilder.inheritIO();
             Process proc = procBuilder.start();            
             proc.waitFor();
@@ -616,6 +600,53 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     }
     
     
+    private int build(String buildPath) {
+        if (installTool.getSystem().equals("Win")) {
+            return buildWin(buildPath);
+        }
+        return buildLinux(buildPath);        
+    }
+    
+    private int buildLinux(String buildPath) {
+        try {
+            ProcessBuilder procBuilder = new ProcessBuilder("yt","-n","build");
+            procBuilder.directory(new File(buildPath));
+            procBuilder.inheritIO();
+            Process proc = procBuilder.start();
+            proc.waitFor();
+            return proc.exitValue();
+        } catch (IOException ex) {
+            return 2;
+        } catch (InterruptedException ex) {
+            return 3;
+        }
+    }
+    
+    private int buildWin(String buildPath) {
+        String yottaPath = System.getenv("YOTTA_PATH");
+        String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
+        try {
+            ProcessBuilder procBuilder  = new ProcessBuilder(yottaInstall+"\\workspace\\Scripts\\yt","-n","build");
+            procBuilder.directory(new File(buildPath));
+            procBuilder.environment().put("PATH", installDir.getAbsolutePath() + "\\lib\\srecord\\" + ";" + yottaPath + ";" + System.getenv("PATH"));
+            procBuilder.inheritIO();
+            Process proc = procBuilder.start();            
+            proc.waitFor();
+            return proc.exitValue();
+        } catch (IOException ex) {
+            ex.printStackTrace(System.out);
+            int opt = JOptionPane.showConfirmDialog(this,
+                    AbbozzaLocale.entry("ERR.YOTTA_MISSING") + "\n"
+                    + AbbozzaLocale.entry("MSG.CONTINUE_INSTALLATION"),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.YES_NO_OPTION);
+            if (opt == JOptionPane.YES_OPTION) {
+                return 2;
+            }
+        } catch (InterruptedException ex) {
+            return 3;
+        }
+        return 4;
+    }
     
     private void addMsg(Document msgDoc, String text) {
         try {
