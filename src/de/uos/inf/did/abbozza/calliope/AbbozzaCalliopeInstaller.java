@@ -325,6 +325,26 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             return;
         }
 
+        File sketchDir = new File(abbozzaDir + "/sketches/");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",sketchDir.getAbsolutePath()));
+        sketchDir.mkdirs();
+        if (!sketchDir.canWrite()) {
+            JOptionPane.showMessageDialog(this,
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", sketchDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        File binDir = new File(abbozzaDir + "/bin/");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",binDir.getAbsolutePath()));
+        binDir.mkdirs();
+        if (!binDir.canWrite()) {
+            JOptionPane.showMessageDialog(this,
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", binDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         /**
          * 5th step: Backup previous version
          */
@@ -370,12 +390,12 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.copyDirFromJar(installerJar, "lib/srecord/", abbozzaDir + "/lib/srecord/");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/build/"));
         installTool.copyDirFromJar(installerJar, "build/", abbozzaDir + "/build/");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozzaC.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", abbozzaDir + "/abbozzaC.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", abbozzaDir + "/abbozzaC.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozzaMicroPython.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", abbozzaDir + "/abbozzaMicroPython.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", abbozzaDir + "/abbozzaMicroPython.bat");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/bin/abbozzaC.[sh|bat]"));
+        installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", abbozzaDir + "/bin/abbozzaC.sh");
+        installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", abbozzaDir + "/bin/abbozzaC.bat");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/bin/abbozzaMicroPython.[sh|bat]"));
+        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", abbozzaDir + "/bin/abbozzaMicroPython.sh");
+        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", abbozzaDir + "/bin/abbozzaMicroPython.bat");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",abbozzaDir + "/abbozza_icon.png"));
         installTool.copyFromJar(installerJar, "lib/abbozza_icon.png", abbozzaDir + "/lib/abbozza_icon.png");
  
@@ -383,12 +403,16 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          * 8th step: Add application to menus
          */
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.ADDING_MENU"));
+        String suffix = "sh";
+        if (installTool.getSystem().equals("Win")) {
+            suffix = "bat";
+        }
         installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
-                "abbozza! Calliope C",
-                abbozzaDir + "/abbozzaC.sh", abbozzaDir + "/lib/abbozza_icon.png", false);
+            "abbozza! Calliope C",
+            abbozzaDir + "/bin/abbozzaC."+suffix, abbozzaDir + "/lib/abbozza_icon.png", false);
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
-                "abbozza! Calliope MicroPython",
-                abbozzaDir + "/abbozzaMicroPython.sh", abbozzaDir + "/lib/abbozza_icon.png", false);
+            "abbozza! Calliope MicroPython",
+            abbozzaDir + "/bin/abbozzaMicroPython."+suffix, abbozzaDir + "/lib/abbozza_icon.png", false);
 
         /**
          * Write configuration file
@@ -455,7 +479,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.SUCCESS"),
                 AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.INFORMATION_MESSAGE);
         
-        // this.setVisible(false);
+        this.setVisible(false);
+        System.exit(0);
         return;
     }//GEN-LAST:event_installButtonActionPerformed
 
