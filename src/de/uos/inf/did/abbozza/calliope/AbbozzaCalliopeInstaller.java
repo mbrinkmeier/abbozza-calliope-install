@@ -36,9 +36,8 @@ import javax.swing.text.StyledDocument;
 public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
     // private String toolsDir;
-    private String abbozzaDir;
+    // private String abbozzaDir;
     public Properties prefs;
-    private File installDir;
     private InstallTool installTool;
     private boolean isAdmin;
     private JarFile installerJar;
@@ -81,7 +80,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         int y = (screen.height - getHeight()) / 2;
         setLocation(x, y);
 
-        abbozzaDir = System.getProperty("user.home") + "/.abbozza/calliope";
+        String abbozzaDir = System.getProperty("user.home") + "/.abbozza/calliope";
         File aD = new File(abbozzaDir);
 
         if (aD.exists()) {
@@ -317,17 +316,24 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
+
         Document msgDoc = msgPanel.getDocument();
 
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
                 
-        installDir = new File(installField.getText());
+        /**
+         * 0th step:
+         * Fetch the directories
+         */
+        File installDir = new File(installField.getText());                   
+        File sketchbookDir = new File(sketchbookField.getText());
         File browserFile = new File(browserField.getText());
-        boolean yottaInstalled = true;
+        File userDir = new File(System.getProperty("user.home") + "/.abbozza");
         
         /**
          * 1st step: Check if yotta is installed
          */
+        boolean yottaInstalled = true;
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.CHECKING_PREREQUISITES"));
         if (!checkPrerequisites()) {
             yottaInstalled = false;
@@ -341,16 +347,36 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
 
         /**
-         * 3rd step: Create abbozza dir
+         * 3rd step: 
+         * Create directories
          */
-        abbozzaDir = installDir.getAbsolutePath();
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",abbozzaDir));
-        File abzDir = new File(abbozzaDir);
-        abzDir.mkdirs();
-
-        if (!abzDir.canWrite()) {
+        
+        // Installation directory
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR", installDir.getAbsolutePath()));
+        installDir.mkdirs();
+        if (!installDir.canWrite()) {
             JOptionPane.showMessageDialog(this,
-                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", abzDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", installDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // User directory
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR", userDir.getAbsolutePath()));
+        userDir.mkdirs();
+        if (!userDir.canWrite()) {
+            JOptionPane.showMessageDialog(this,
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", userDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // sketchbook dir
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR", sketchbookDir.getAbsolutePath()));
+        sketchbookDir.mkdirs();
+        if (!sketchbookDir.canWrite()) {
+            JOptionPane.showMessageDialog(this,
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", sketchbookDir.getAbsolutePath()),
                     AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -358,7 +384,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         /**
          * 4th step: Install subdirs lib and build
          */
-        File libDir = new File(abbozzaDir + "/lib/");
+        File libDir = new File(installDir.getAbsolutePath() + "/lib/");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",libDir.getAbsolutePath()));
         libDir.mkdirs();
         if (!libDir.canWrite()) {
@@ -368,32 +394,34 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             return;
         }
 
-        File buildDir = new File(abbozzaDir + "/build/");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",buildDir.getAbsolutePath()));
-        buildDir.mkdirs();
-        if (!buildDir.canWrite()) {
+        File pluginDir = new File(installDir.getAbsolutePath() + "/plugins/");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",pluginDir.getAbsolutePath()));
+        pluginDir.mkdirs();
+        if (!pluginDir.canWrite()) {
             JOptionPane.showMessageDialog(this,
-                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", buildDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", pluginDir.getAbsolutePath()),
                     AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        File sketchDir = new File(abbozzaDir + "/sketches/");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",sketchDir.getAbsolutePath()));
-        sketchDir.mkdirs();
-        if (!sketchDir.canWrite()) {
-            JOptionPane.showMessageDialog(this,
-                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", sketchDir.getAbsolutePath()),
-                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        File binDir = new File(abbozzaDir + "/bin/");
+        File binDir = new File(installDir.getAbsolutePath() + "/bin/");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",binDir.getAbsolutePath()));
         binDir.mkdirs();
         if (!binDir.canWrite()) {
             JOptionPane.showMessageDialog(this,
                     AbbozzaLocale.entry("ERR.CANNOT_WRITE", binDir.getAbsolutePath()),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        
+        File localDir  = new File(userDir.getAbsolutePath() + "/calliope/");
+        File buildDir = new File(installDir.getAbsolutePath() + "/build/");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",buildDir.getAbsolutePath()));
+        buildDir.mkdirs();
+        if (!buildDir.canWrite()) {
+            JOptionPane.showMessageDialog(this,
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", buildDir.getAbsolutePath()),
                     AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -757,4 +785,19 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         } catch (BadLocationException ex) {
         }
     }
+    
+
+    private boolean createDir(String path, Document msgDoc) {
+        File buildDir = new File(path);
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",path));
+        buildDir.mkdirs();
+        if (!buildDir.canWrite()) {
+            JOptionPane.showMessageDialog(this,
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", path),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
 }
