@@ -10,10 +10,13 @@ import de.uos.inf.did.abbozza.AbbozzaServer;
 import de.uos.inf.did.abbozza.install.InstallTool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
@@ -316,7 +319,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
-
+        
         Document msgDoc = msgPanel.getDocument();
 
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
@@ -498,8 +501,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                     AbbozzaLocale.entry("MSG.PRECOMPILE","Calliope Mini"), 
                     AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
             if ( opt == JOptionPane.YES_OPTION) {
-                addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_CALLIOPE"));                    
-                if ( build(userDir.getAbsolutePath() + "/calliopeC/build/calliope/", installDir.getAbsolutePath() ) != 0 ) {
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_CALLIOPE"));
+                if ( build(userDir.getAbsolutePath() + "/calliopeC/build/calliope/", installDir.getAbsolutePath(),msgDoc ) != 0 ) {
                     addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
                 } else {
                     addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
@@ -511,7 +514,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                     AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
             if ( opt == JOptionPane.YES_OPTION) {
                 addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_MICROBIT"));                    
-                if ( build(userDir.getAbsolutePath() + "/calliopeC/build/microbit/", installDir.getAbsolutePath() ) != 0 ) {
+                if ( build(userDir.getAbsolutePath() + "/calliopeC/build/microbit/", installDir.getAbsolutePath(),msgDoc ) != 0 ) {
                     addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
                 } else {
                     addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
@@ -689,9 +692,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     }
     
     
-    private int build(String buildPath, String installPath) {
+    private int build(String buildPath, String installPath, Document msgDoc) {
         if (installTool.getSystem().equals("Win")) {
-            return buildWin(buildPath, installPath);
+            return buildWin(buildPath, installPath, msgDoc);
         }
         return buildLinux(buildPath);        
     }
@@ -711,16 +714,25 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
     }
     
-    private int buildWin(String buildPath, String installPath) {
+    private int buildWin(String buildPath, String installPath, Document msgDoc) {
         String yottaPath = System.getenv("YOTTA_PATH");
         String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
         try {
             ProcessBuilder procBuilder  = new ProcessBuilder(yottaInstall+"\\workspace\\Scripts\\yt","-n","build");
             procBuilder.directory(new File(buildPath));
             procBuilder.environment().put("PATH", installPath + "\\lib\\srecord\\" + ";" + yottaPath + ";" + System.getenv("PATH"));
-            procBuilder.inheritIO();
-            Process proc = procBuilder.start();            
-            proc.waitFor();
+            // procBuilder.inheritIO();
+            procBuilder.redirectOutput(ProcessBuilder.Redirect.PIPE);
+            Process proc = procBuilder.start();
+            InputStream inp = proc.getInputStream();
+            BufferedReader buf = new BufferedReader(new InputStreamReader(inp));
+            while ( proc.isAlive() ) {
+                if ( buf.ready() ) {
+                    String line = buf.readLine();
+                    addMsg(msgDoc,line);
+                }
+            }
+            // proc.waitFor();
             return proc.exitValue();
         } catch (IOException ex) {
             ex.printStackTrace(System.out);
@@ -731,8 +743,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             if (opt == JOptionPane.YES_OPTION) {
                 return 2;
             }
-        } catch (InterruptedException ex) {
-            return 3;
         }
         return 4;
     }
