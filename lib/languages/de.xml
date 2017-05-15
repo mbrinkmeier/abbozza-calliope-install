@@ -2,6 +2,7 @@
 <language id="de">
     <msg id="GUI.TITLE">abbozza! Calliope Installation</msg>
     <msg id="GUI.INSTALL_DIR">Das Verzeichnis, in das abbozza! installiert werden soll</msg>
+    <msg id="GUI.SKETCHBOOK_DIR">Das Verzeichnis, in das abbozza! Sketches speichern soll</msg>
     <msg id="GUI.BROWSER">Der Browser, den abbozza! verwenden soll</msg>
     <msg id="GUI.CANCEL">Abbrechen</msg>
     <msg id="GUI.INSTALL">Installieren</msg>
@@ -38,4 +39,8 @@ Das abbozza! Team </msg>
     <msg id="MSG.COMPILE_FAILED">... Compilieren fehlgeschlagen</msg>
     <msg id="MSG.COMPILE_SUCCESS">... Compilieren erfolgreich</msg>
     <msg id="MSG.WRITING_CONFIGURATION">... Schreibe Konfigurationsdatei #</msg>    
+    <msg id="MSG.PRECOMPILE">
+Für den # vorkompilieren?
+(erfordert eine Internetverbindung)                
+    </msg>
 </language>

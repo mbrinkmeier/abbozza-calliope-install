@@ -2,6 +2,7 @@
 <language id="en">
     <msg id="GUI.TITLE">abbozza! Calliope Installer</msg>
     <msg id="GUI.INSTALL_DIR">Directory in which abbozza! should be installed</msg>
+    <msg id="GUI.SKETCHBOOK_DIR">Directoy to which sketches are saved</msg>
     <msg id="GUI.BROWSER">Browser to be used by abbozza!</msg>
     <msg id="GUI.CANCEL">Cancel</msg>
     <msg id="GUI.INSTALL">Install</msg>
@@ -34,4 +35,8 @@ The abbozza! Team </msg>
     <msg id="MSG.COMPILE_FAILED">... compilation failed (check access to http://github.com)</msg>
     <msg id="MSG.COMPILE_SUCCESS">... compilation finished</msg>
     <msg id="MSG.WRITING_CONFIGURATION">... writing config file #</msg>    
+    <msg id="MSG.PRECOMPILE">
+PRecompile for the #?
+(requires connection to the internet)                
+    </msg>
 </language>

@@ -23,9 +23,11 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import javax.swing.text.StyledDocument;
 
 /**
  *
@@ -119,10 +121,14 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         msgPanel = new javax.swing.JTextPane();
         installField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        sketchbookButton = new javax.swing.JButton();
+        installDirButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         browserField = new javax.swing.JTextField();
         browserButton = new javax.swing.JButton();
+        installField1 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        sketchbookField = new javax.swing.JTextField();
+        sketchbookButton = new javax.swing.JButton();
         buttonPanel = new javax.swing.JPanel();
         cancelButton = new javax.swing.JButton();
         installButton = new javax.swing.JButton();
@@ -154,7 +160,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         mainPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 15, 5));
         java.awt.GridBagLayout mainPanelLayout = new java.awt.GridBagLayout();
         mainPanelLayout.columnWidths = new int[] {430, 50};
-        mainPanelLayout.rowHeights = new int[] {180, 15, 30, 30, 30, 30};
+        mainPanelLayout.rowHeights = new int[] {180, 15, 30, 30, 30, 30, 30, 30};
         mainPanel.setLayout(mainPanelLayout);
 
         msgPanel.setEditable(false);
@@ -195,8 +201,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         mainPanel.add(jLabel2, gridBagConstraints);
         jLabel2.getAccessibleContext().setAccessibleName("Das Zielverzeichnis für die Installation:");
 
-        sketchbookButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/uos/inf/did/abbozza/img/directory24.png"))); // NOI18N
-        sketchbookButton.addActionListener(new java.awt.event.ActionListener() {
+        installDirButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/uos/inf/did/abbozza/img/directory24.png"))); // NOI18N
+        installDirButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 installDirButtonActionPerformed(evt);
             }
@@ -205,20 +211,20 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        mainPanel.add(sketchbookButton, gridBagConstraints);
+        mainPanel.add(installDirButton, gridBagConstraints);
 
         jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         jLabel3.setText(AbbozzaLocale.entry("GUI.BROWSER")
         );
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         mainPanel.add(jLabel3, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         mainPanel.add(browserField, gridBagConstraints);
 
@@ -230,9 +236,56 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         mainPanel.add(browserButton, gridBagConstraints);
+
+        installField1.setText(System.getProperty("user.home")+"/abbozza");
+        installField1.setToolTipText("Das Sketchbook-Verzeichnis");
+        installField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                installField1ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        mainPanel.add(installField1, gridBagConstraints);
+
+        jLabel6.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        jLabel6.setText(AbbozzaLocale.entry("GUI.SKETCHBOOK_DIR"));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.SOUTH;
+        mainPanel.add(jLabel6, gridBagConstraints);
+
+        sketchbookField.setText(System.getProperty("user.home")+"/abbozza");
+        sketchbookField.setToolTipText("Das Sketchbook-Verzeichnis");
+        sketchbookField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sketchbookFieldActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        mainPanel.add(sketchbookField, gridBagConstraints);
+
+        sketchbookButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/uos/inf/did/abbozza/img/directory24.png"))); // NOI18N
+        sketchbookButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sketchbookButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        mainPanel.add(sketchbookButton, gridBagConstraints);
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
@@ -455,7 +508,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          * first compile for microbit and calliope
          */
         if ( yottaInstalled ) {
-            int opt = JOptionPane.showConfirmDialog(this, "Precompile for Calliope MINI?\n(Requires internet connection)", "Precompilation", JOptionPane.YES_NO_OPTION);
+            int opt = JOptionPane.showConfirmDialog(this, 
+                    AbbozzaLocale.entry("MSG.PRECOMPILE","Calliope Mini"), 
+                    AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
             if ( opt == JOptionPane.YES_OPTION) {
                 addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_CALLIOPE"));                    
                 if ( build(abbozzaDir + "/build/calliope/" ) != 0 ) {
@@ -465,7 +520,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                 }
             }
             
-            opt = JOptionPane.showConfirmDialog(this, "Precompile for micro:bit?\n(Requires internet connection)", "Precompilation", JOptionPane.YES_NO_OPTION);
+            opt = JOptionPane.showConfirmDialog(this, 
+                    AbbozzaLocale.entry("MSG.PRECOMPILE","micro:bit"), 
+                    AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
             if ( opt == JOptionPane.YES_OPTION) {
                 addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_MICROBIT"));                    
                 if ( build(abbozzaDir + "/build/microbit/" ) != 0 ) {
@@ -476,12 +533,12 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             }
         }
         
-        JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.SUCCESS"),
-                AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.INFORMATION_MESSAGE);
+        addMsg(msgDoc,AbbozzaLocale.entry("MSG.SUCCESS"));
+        JOptionPane.showMessageDialog(this, new JTextPane((StyledDocument) msgDoc),
+                AbbozzaLocale.entry("MSG.SUCCESS"), JOptionPane.INFORMATION_MESSAGE);
         
         this.setVisible(false);
         System.exit(0);
-        return;
     }//GEN-LAST:event_installButtonActionPerformed
 
 
@@ -519,6 +576,23 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     private void installFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_installFieldActionPerformed
+
+    private void installField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_installField1ActionPerformed
+
+    private void sketchbookFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sketchbookFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sketchbookFieldActionPerformed
+
+    private void sketchbookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sketchbookButtonActionPerformed
+        JFileChooser chooser = new JFileChooser(installField.getText());
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal = chooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            installField.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
+    }//GEN-LAST:event_sketchbookButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -559,17 +633,21 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;
     private javax.swing.JButton installButton;
+    private javax.swing.JButton installDirButton;
     private javax.swing.JTextField installField;
+    private javax.swing.JTextField installField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel logoPanel;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JTextPane msgPanel;
     private javax.swing.JButton sketchbookButton;
+    private javax.swing.JTextField sketchbookField;
     // End of variables declaration//GEN-END:variables
 
     /**
