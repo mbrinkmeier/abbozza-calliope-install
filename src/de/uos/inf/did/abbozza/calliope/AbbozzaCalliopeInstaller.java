@@ -438,10 +438,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
             "abbozza! Calliope C",
-            installDir + "/bin/abbozzaC."+suffix, installDir + "/lib/abbozza_icon.png", false);
+            installDir + "/bin/abbozzaC."+suffix, installDir + "/lib/abbozza_icon", false);
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
             "abbozza! Calliope MicroPython",
-            installDir + "/bin/abbozzaMicroPython."+suffix, installDir + "/lib/abbozza_icon.png", false);
+            installDir + "/bin/abbozzaMicroPython."+suffix, installDir + "/lib/abbozza_icon", false);
         
         /**
          * Ask for global icons
