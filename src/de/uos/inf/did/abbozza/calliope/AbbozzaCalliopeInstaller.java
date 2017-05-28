@@ -422,8 +422,15 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/bin/abbozzaMicroPython.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", installDir + "/bin/abbozzaMicroPython.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", installDir + "/bin/abbozzaMicroPython.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/abbozza_icon.png"));
-        installTool.copyFromJar(installerJar, "lib/abbozza_icon.png", installDir + "/lib/abbozza_icon.png");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/bin/abbozzaMonitor.[sh|bat]"));
+        installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
+        installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/abbozza_icon_white"));
+        installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.png", installDir + "/lib/abbozza_icon_white.png");
+        installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.ico", installDir + "/lib/abbozza_icon_white.ico");
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/abbozza_icon_monitor"));
+        installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.png", installDir + "/lib/abbozza_icon_monitor.png");
+        installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.ico", installDir + "/lib/abbozza_icon_monitor.ico");
  
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",userDir + "/calliopeC/build/"));
         installTool.copyDirFromJar(installerJar, "build/", userDir + "/calliopeC/build/");
@@ -432,16 +439,20 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          * 8th step: Add application to menus
          */
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.ADDING_MENU"));
-        String suffix = "sh";
-        if (installTool.getSystem().equals("Win")) {
-            suffix = "bat";
-        }
+        String scriptSuffix = installTool.getScriptSuffix();
+        String iconSuffix = installTool.getIconSuffix();
+        
         installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
             "abbozza! Calliope C",
-            installDir + "/bin/abbozzaC."+suffix, installDir + "/lib/abbozza_icon", false);
+            installDir + "/bin/abbozzaC."+ scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, false);
+        
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
             "abbozza! Calliope MicroPython",
-            installDir + "/bin/abbozzaMicroPython."+suffix, installDir + "/lib/abbozza_icon", false);
+            installDir + "/bin/abbozzaMicroPython."+scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, false);
+
+        installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
+            "abbozza! Monitor",
+            installDir + "/bin/abbozzaMonitor."+scriptSuffix, installDir + "/lib/abbozza_icon_monitor." + iconSuffix, false);
         
         /**
          * Ask for global icons
