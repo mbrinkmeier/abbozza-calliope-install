@@ -5,7 +5,10 @@
 #ifndef _ABBOZZA_H
 #define _ABBOZZA_H
 
-        
+#include "MicroBit.h"
+
+MicroBit abbozza;
+  
 /**
  * Images
  */
