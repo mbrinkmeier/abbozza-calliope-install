@@ -26,7 +26,9 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -534,7 +536,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         
         addMsg(msgDoc,AbbozzaLocale.entry("MSG.SUCCESS"));
-        JOptionPane.showMessageDialog(this, new JTextPane((StyledDocument) msgDoc),
+        JOptionPane.showMessageDialog(this, new JScrollPane(new JTextPane((StyledDocument) msgDoc),JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
                 AbbozzaLocale.entry("MSG.SUCCESS"), JOptionPane.INFORMATION_MESSAGE);
         
         this.setVisible(false);
