@@ -369,7 +369,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         if (!createDir(installDir.getAbsolutePath() + "/bin/",msgDoc)) return;
         if (!createDir(installDir.getAbsolutePath() + "/build/",msgDoc)) return;    // used as template for users
 
-        if (!createDir(userDir.getAbsolutePath() + "/calliope/",msgDoc)) return;
+        if (!createDir(userDir.getAbsolutePath() + "/calliopeMP/",msgDoc)) return;
         if (!createDir(userDir.getAbsolutePath() + "/calliopeC/",msgDoc)) return;
         if (!createDir(userDir.getAbsolutePath() + "/calliopeC/build/",msgDoc)) return;
         
@@ -477,7 +477,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         config.setProperty("installPath", installDir.getAbsolutePath() );
         config.setProperty("sketchbookPath", sketchbookDir.getAbsolutePath() );
         
-        File prefFile = new File(userDir.getAbsolutePath() + "/calliope/abbozza.cfg");
+        File prefFile = new File(userDir.getAbsolutePath() + "/calliopeMP/abbozza.cfg");
         try {            
             prefFile.getParentFile().mkdirs();
             prefFile.createNewFile();
