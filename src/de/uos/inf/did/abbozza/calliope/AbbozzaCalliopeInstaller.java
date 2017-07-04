@@ -304,6 +304,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         buttonPanel.add(cancelButton);
 
         installButton.setText(AbbozzaLocale.entry("GUI.INSTALL"));
+        installButton.setFocusCycleRoot(true);
+        installButton.setSelected(true);
         installButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 installButtonActionPerformed(evt);
@@ -536,7 +538,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         
         addMsg(msgDoc,AbbozzaLocale.entry("MSG.SUCCESS"));
-        JOptionPane.showMessageDialog(this, new JScrollPane(new JTextPane((StyledDocument) msgDoc),JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
+        JScrollPane scroller = new JScrollPane(new JTextPane((StyledDocument) msgDoc),JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroller.setMaximumSize(new Dimension(400,300));
+        JOptionPane.showMessageDialog(this, scroller ,
                 AbbozzaLocale.entry("MSG.SUCCESS"), JOptionPane.INFORMATION_MESSAGE);
         
         this.setVisible(false);
