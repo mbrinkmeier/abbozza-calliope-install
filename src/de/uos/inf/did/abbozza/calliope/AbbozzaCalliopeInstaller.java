@@ -76,7 +76,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             browserField.setEnabled(false);
             browserButton.setEnabled(false);
         }
-
+        
         this.setTitle(AbbozzaLocale.entry("GUI.TITLE"));
 
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -85,7 +85,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         int y = (screen.height - getHeight()) / 2;
         setLocation(x, y);
 
-        String abbozzaDir = System.getProperty("user.home") + "/.abbozza/calliope";
+        String abbozzaDir = System.getProperty("user.home") + "/.abbozza/calliopeC";
         File aD = new File(abbozzaDir);
 
         if (aD.exists()) {
