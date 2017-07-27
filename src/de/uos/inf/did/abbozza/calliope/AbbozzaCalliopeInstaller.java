@@ -26,9 +26,11 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -68,6 +70,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
 
         initComponents();
+
+        JRootPane rootPane = SwingUtilities.getRootPane(installButton); 
+        rootPane.setDefaultButton(installButton);
 
         String osname = System.getProperty("os.name").toLowerCase();
         if (osname.contains("mac")) {
@@ -183,6 +188,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
         installField.setText(System.getProperty("user.home")+"/abbozza");
         installField.setToolTipText("Das Sketchbook-Verzeichnis");
+        installField.setRequestFocusEnabled(false);
         installField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 installFieldActionPerformed(evt);
@@ -304,7 +310,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         buttonPanel.add(cancelButton);
 
         installButton.setText(AbbozzaLocale.entry("GUI.INSTALL"));
-        installButton.setFocusCycleRoot(true);
         installButton.setSelected(true);
         installButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
