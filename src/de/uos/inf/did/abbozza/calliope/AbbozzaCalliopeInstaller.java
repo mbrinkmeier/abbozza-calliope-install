@@ -7,6 +7,7 @@ package de.uos.inf.did.abbozza.calliope;
 
 import de.uos.inf.did.abbozza.AbbozzaLocale;
 import de.uos.inf.did.abbozza.AbbozzaServer;
+import de.uos.inf.did.abbozza.install.AbbozzaLoggingFrame;
 import de.uos.inf.did.abbozza.install.InstallTool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -71,9 +72,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
         initComponents();
 
-        JRootPane rootPane = SwingUtilities.getRootPane(installButton); 
-        rootPane.setDefaultButton(installButton);
-
         String osname = System.getProperty("os.name").toLowerCase();
         if (osname.contains("mac")) {
             // OsX only requires the command 'open'
@@ -90,6 +88,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         int y = (screen.height - getHeight()) / 2;
         setLocation(x, y);
 
+        JRootPane rootPane = SwingUtilities.getRootPane(installButton); 
+        rootPane.setDefaultButton(installButton);
+        installButton.requestFocusInWindow();
+                
         String abbozzaDir = System.getProperty("user.home") + "/.abbozza/calliopeC";
         File aD = new File(abbozzaDir);
 
@@ -188,7 +190,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
         installField.setText(System.getProperty("user.home")+"/abbozza");
         installField.setToolTipText("Das Sketchbook-Verzeichnis");
-        installField.setRequestFocusEnabled(false);
         installField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 installFieldActionPerformed(evt);
@@ -330,6 +331,12 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
         
         Document msgDoc = msgPanel.getDocument();
+        
+        this.setVisible(false);
+        
+        AbbozzaLoggingFrame logFrame = new AbbozzaLoggingFrame();
+        logFrame.setDocument(msgDoc);
+        logFrame.setVisible(true);
 
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
                 
@@ -550,13 +557,18 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         
         addMsg(msgDoc,AbbozzaLocale.entry("MSG.SUCCESS"));
+        
+        /*
         JScrollPane scroller = new JScrollPane(new JTextPane((StyledDocument) msgDoc),JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scroller.setMaximumSize(new Dimension(400,300));
         JOptionPane.showMessageDialog(this, scroller ,
                 AbbozzaLocale.entry("MSG.SUCCESS"), JOptionPane.INFORMATION_MESSAGE);
         
         this.setVisible(false);
-        System.exit(0);
+        */
+        // System.exit(0);
+        
+        logFrame.enableButton();
     }//GEN-LAST:event_installButtonActionPerformed
 
 

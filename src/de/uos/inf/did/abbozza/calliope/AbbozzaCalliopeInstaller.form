@@ -129,7 +129,6 @@
               <Connection code="System.getProperty(&quot;user.home&quot;)+&quot;/abbozza&quot;" type="code"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Das Sketchbook-Verzeichnis"/>
-            <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="installFieldActionPerformed"/>
