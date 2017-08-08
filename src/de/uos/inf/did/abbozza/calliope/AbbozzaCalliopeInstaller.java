@@ -15,6 +15,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
+/**
+ * @fileoverview The main class for the abbozza! Calliope installer
+ * @author michael.brinkmeier@uni-osnabrueck.de (Michael Brinkmeier)
+ */
+
 package de.uos.inf.did.abbozza.calliope;
 
 import de.uos.inf.did.abbozza.AbbozzaLocale;
