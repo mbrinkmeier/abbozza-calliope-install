@@ -82,6 +82,7 @@
         </copy>        
         <copy todir="build/classes/de/uos/inf/did/abbozza/install/">
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/InstallTool*.class"/>
+            <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/AbbozzaLoggingFrame.class"/>
         </copy>        
     </target>
 </project>
