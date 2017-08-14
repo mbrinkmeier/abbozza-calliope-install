@@ -449,7 +449,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/jssc-2.8.0.jar"));
         installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
-        installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/license_jssc.txt");
+        installTool.copyFromJar(installerJar, "lib/license_jssc.txt", installDir + "/lib/license_jssc.txt");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/rsyntaxtextarea.jar"));
         installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/rsyntaxtextarea.jar");
         installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/license_rsyntaxtextarea.txt");
