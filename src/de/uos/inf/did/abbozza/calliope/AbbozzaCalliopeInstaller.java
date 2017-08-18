@@ -447,15 +447,13 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/jssc-2.8.0.jar"));
         installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/jssc-2.8.0.jar"));
-        installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
         installTool.copyFromJar(installerJar, "lib/license_jssc.txt", installDir + "/lib/license_jssc.txt");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/rsyntaxtextarea.jar"));
         installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/rsyntaxtextarea.jar");
-        installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/license_rsyntaxtextarea.txt");
+        installTool.copyFromJar(installerJar, "lib/license_rsyntaxtextarea.txt", installDir + "/lib/license_rsyntaxtextarea.txt");
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/autocomplete.jar"));
         installTool.copyFromJar(installerJar, "lib/autocomplete.jar", installDir + "/lib/autocomplete.jar");
-        installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/license_autocomplete.txt");
+        installTool.copyFromJar(installerJar, "lib/license_autocomplete.txt", installDir + "/lib/license_autocomplete.txt");
         
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/srecord/"));
         installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
