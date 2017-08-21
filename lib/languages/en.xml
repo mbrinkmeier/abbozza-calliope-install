@@ -30,13 +30,13 @@ The abbozza! Team </msg>
     <msg id="MSG.BACKUP">... moving old version to #</msg>
     <msg id="MSG.WRITING">... writing #</msg>
     <msg id="MSG.ADDING_MENU">... generating menu entries</msg>
-    <msg id="MSG.COMPILE_CALLIOPE">... compiling for Calliope Mini</msg>
-    <msg id="MSG.COMPILE_MICROBIT">... compiling for micro:bit</msg>
-    <msg id="MSG.COMPILE_FAILED">... compilation failed (check access to http://github.com)</msg>
-    <msg id="MSG.COMPILE_SUCCESS">... compilation finished</msg>
+    <msg id="MSG.COMPILE_CALLIOPE">... downloading for Calliope Mini</msg>
+    <msg id="MSG.COMPILE_MICROBIT">... downloading for micro:bit</msg>
+    <msg id="MSG.COMPILE_FAILED">... download failed (check access to http://github.com)</msg>
+    <msg id="MSG.COMPILE_SUCCESS">... download finished</msg>
     <msg id="MSG.WRITING_CONFIGURATION">... writing config file #</msg>    
     <msg id="MSG.PRECOMPILE">
-PRecompile for the #?
+Download latest sources for the #?
 (requires connection to the internet)                
     </msg>
 </language>

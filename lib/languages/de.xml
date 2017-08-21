@@ -34,13 +34,14 @@ Das abbozza! Team </msg>
     <msg id="MSG.BACKUP">... Kopiere alte Version nach #</msg>
     <msg id="MSG.WRITING">... Schreibe #</msg>
     <msg id="MSG.ADDING_MENU">... Erzeuge Menu-Einträge</msg>
-    <msg id="MSG.COMPILE_CALLIOPE">... Compiliere für Calliope Mini</msg>
-    <msg id="MSG.COMPILE_MICROBIT">... Compiliere für micro:bit</msg>
-    <msg id="MSG.COMPILE_FAILED">... Compilieren fehlgeschlagen</msg>
-    <msg id="MSG.COMPILE_SUCCESS">... Compilieren erfolgreich</msg>
+    <msg id="MSG.COMPILE_CALLIOPE">... Download für den Calliope Mini</msg>
+    <msg id="MSG.COMPILE_MICROBIT">... Download für den micro:bit</msg>
+    <msg id="MSG.COMPILE_IN">... Speichere in das Verzeichnis</msg>
+    <msg id="MSG.COMPILE_FAILED">... Download fehlgeschlagen</msg>
+    <msg id="MSG.COMPILE_SUCCESS">... Download erfolgreich</msg>
     <msg id="MSG.WRITING_CONFIGURATION">... Schreibe Konfigurationsdatei #</msg>    
     <msg id="MSG.PRECOMPILE">
-Für den # vorkompilieren?
+Die aktuellsten Quellen für den # herunterladen?
 (erfordert eine Internetverbindung)                
     </msg>
 </language>
