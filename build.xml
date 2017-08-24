@@ -83,6 +83,12 @@
         <copy todir="build/classes/de/uos/inf/did/abbozza/install/">
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/InstallTool*.class"/>
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/AbbozzaLoggingFrame*.class"/>
-        </copy>        
+        </copy>
+        <copy todir="build/classes/build/calliope">
+            <fileset dir="buildsystem/calliope"/>            
+        </copy>
+        <copy todir="build/classes/build/microbit">
+            <fileset dir="buildsystem/microbit"/>            
+        </copy>
     </target>
 </project>

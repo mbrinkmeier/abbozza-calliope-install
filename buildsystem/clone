@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Clone the github repositories
+git clone https://github.com/calliope-mini/calliope-demo.git calliope
+git clone https://github.com/lancaster-university/microbit-samples.git microbit
+
+# Remove unused files
+rm -r calliope/source/*
+rm -r microbit/source/*
+
+# Copy the abbozza specific files
+cp -r ../../abbozza-calliope/lib/build/calliope/* calliope
+cp -r ../../abbozza-calliope/lib/build/microbit/* microbit
+
