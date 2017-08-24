@@ -92,8 +92,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         if (osname.contains("mac")) {
             // OsX only requires the command 'open'
             browserField.setText("open");
-            browserField.setEnabled(false);
-            browserButton.setEnabled(false);
+            browserField.setEnabled(true);
+            browserButton.setEnabled(true);
         }
         
         this.setTitle(AbbozzaLocale.entry("GUI.TITLE"));
@@ -666,6 +666,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AbbozzaCalliopeInstaller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
