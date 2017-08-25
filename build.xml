@@ -75,6 +75,8 @@
             <file file="../abbozza-calliope/dist/abbozza-calliope.jar"/>
         </copy>
     </target>
+    
+    
     <target name="-pre-jar">
         <copy todir="build/classes/de/uos/inf/did/abbozza/">
             <file file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/AbbozzaLocale.class"/>
@@ -87,8 +89,14 @@
         <copy todir="build/classes/build/calliope">
             <fileset dir="buildsystem/calliope"/>            
         </copy>
+        <copy todir="build/classes/build/calliope" verbose="true">
+            <fileset dir="../abbozza-calliope/lib/build/calliope"/>
+        </copy>
         <copy todir="build/classes/build/microbit">
             <fileset dir="buildsystem/microbit"/>            
+        </copy>
+        <copy todir="build/classes/build/microbit" verbose="true">
+            <fileset dir="../abbozza-calliope/lib/build/microbit"/>
         </copy>
     </target>
 </project>
