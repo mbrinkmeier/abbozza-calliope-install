@@ -65,6 +65,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     private InstallTool installTool;
     private boolean isAdmin;
     private JarFile installerJar;
+    private boolean globalInstall = false;
 
     /**
      * Creates new form AbbozzaInstaller
@@ -504,15 +505,15 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         
         installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
             "abbozza! Calliope C",
-            installDir + "/bin/abbozzaC."+ scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, false);
+            installDir + "/bin/abbozzaC."+ scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, globalInstall);
         
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
             "abbozza! Calliope MicroPython",
-            installDir + "/bin/abbozzaMicroPython."+scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, false);
+            installDir + "/bin/abbozzaMicroPython."+scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, globalInstall);
 
         installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
             "abbozza! Monitor",
-            installDir + "/bin/abbozzaMonitor."+scriptSuffix, installDir + "/lib/abbozza_icon_monitor." + iconSuffix, false);
+            installDir + "/bin/abbozzaMonitor."+scriptSuffix, installDir + "/lib/abbozza_icon_monitor." + iconSuffix, globalInstall);
                 
         /**
          * Write configuration file
@@ -651,11 +652,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -667,12 +663,22 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(AbbozzaCalliopeInstaller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         
+        AbbozzaCalliopeInstaller installer = new AbbozzaCalliopeInstaller();
+
+        /* Read options */
+        for ( int i = 0; i < args.length; i++ ) {
+            if ( args[i].equals("-global")) {
+                installer.setGlobal(true);
+            }
+        }
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AbbozzaCalliopeInstaller().setVisible(true);
+                installer.setVisible(true);
             }
         });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -841,6 +847,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
+    }
+    
+    public void setGlobal(boolean global) {
+        globalInstall = global;
     }
     
 }
