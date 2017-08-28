@@ -99,11 +99,14 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         
         this.setTitle(AbbozzaLocale.entry("GUI.TITLE"));
 
+        InstallTool.centerWindow(this);
+        /*
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - getWidth()) / 2;
         int y = (screen.height - getHeight()) / 2;
         setLocation(x, y);
+        */
 
         JRootPane rootPane = SwingUtilities.getRootPane(installButton); 
         rootPane.setDefaultButton(installButton);
@@ -505,15 +508,15 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         
         installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
             "abbozza! Calliope C",
-            installDir + "/bin/abbozzaC."+ scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, globalInstall);
+            installDir + "/bin/abbozzaC"+ scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
         
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
             "abbozza! Calliope MicroPython",
-            installDir + "/bin/abbozzaMicroPython."+scriptSuffix, installDir + "/lib/abbozza_icon_white." + iconSuffix, globalInstall);
+            installDir + "/bin/abbozzaMicroPython"+scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
         installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
             "abbozza! Monitor",
-            installDir + "/bin/abbozzaMonitor."+scriptSuffix, installDir + "/lib/abbozza_icon_monitor." + iconSuffix, globalInstall);
+            installDir + "/bin/abbozzaMonitor"+scriptSuffix, installDir + "/lib/abbozza_icon_monitor" + iconSuffix, globalInstall);
                 
         /**
          * Write configuration file
