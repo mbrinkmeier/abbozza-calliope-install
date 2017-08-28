@@ -713,6 +713,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     private boolean checkPrerequisites() {
         if (installTool.getSystem().equals("Win")) {
             return checkPrerequisitesWin();
+        } else if (installTool.getSystem().equals("Mac")) {
+            return checkPrerequisitesMac();
         }
         return checkPrerequisitesLinux();
     }
@@ -736,6 +738,26 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         return true;
     }
 
+    
+    private boolean checkPrerequisitesMac() {
+        try {
+            ProcessBuilder procBuilder  = new ProcessBuilder("yt","--version");
+            Process proc = procBuilder.start();            
+            proc.waitFor();
+        } catch (IOException ex) {
+            int opt = JOptionPane.showConfirmDialog(this,
+                    AbbozzaLocale.entry("ERR.YOTTA_MISSING") + "\n"
+                    + AbbozzaLocale.entry("MSG.CONTINUE_INSTALLATION"),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.YES_NO_OPTION);
+            if (opt == JOptionPane.YES_OPTION) {
+                return false;
+            }
+        } catch (InterruptedException ex) {
+        }
+        return true;
+    }
+
+    
     private boolean checkPrerequisitesWin() {
         String yottaPath = System.getenv("YOTTA_PATH");
         String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
