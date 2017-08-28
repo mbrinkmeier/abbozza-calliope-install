@@ -15,12 +15,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 /**
  * @fileoverview The main class for the abbozza! Calliope installer
  * @author michael.brinkmeier@uni-osnabrueck.de (Michael Brinkmeier)
  */
-
 package de.uos.inf.did.abbozza.calliope;
 
 import de.uos.inf.did.abbozza.AbbozzaLocale;
@@ -36,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Properties;
@@ -44,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
@@ -96,22 +96,22 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             browserField.setEnabled(true);
             browserButton.setEnabled(true);
         }
-        
+
         this.setTitle(AbbozzaLocale.entry("GUI.TITLE"));
 
         InstallTool.centerWindow(this);
         /*
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screen.width - getWidth()) / 2;
-        int y = (screen.height - getHeight()) / 2;
-        setLocation(x, y);
-        */
+         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+         int x = (screen.width - getWidth()) / 2;
+         int y = (screen.height - getHeight()) / 2;
+         setLocation(x, y);
+         */
 
-        JRootPane rootPane = SwingUtilities.getRootPane(installButton); 
+        JRootPane rootPane = SwingUtilities.getRootPane(installButton);
         rootPane.setDefaultButton(installButton);
         installButton.requestFocusInWindow();
-                
+
         String abbozzaDir = System.getProperty("user.home") + "/.abbozza/calliopeC";
         File aD = new File(abbozzaDir);
 
@@ -349,32 +349,39 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
-        
-        Document msgDoc = msgPanel.getDocument();
-        
-        this.setVisible(false);
-        
-        AbbozzaLoggingFrame logFrame = new AbbozzaLoggingFrame();
-        logFrame.setDocument(msgDoc);
-        logFrame.setVisible(true);
 
+        Document msgDoc = msgPanel.getDocument();
+
+        this.setVisible(false);
+
+        final AbbozzaLoggingFrame logFrame = new AbbozzaLoggingFrame();
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                logFrame.setDocument(msgDoc);
+                logFrame.setVisible(true);
+            }
+        });
+
+        
+
+        // Thread loggerThread = new Thread(logFrame);
+        // loggerThread.start();
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
-                
+
         /**
          * 0th step: Fetch the directories
-         * 
+         *
          * installDir : The directory to which abbozza! is installed
-         * sketchbookDir: The default directory for sketches 
-         * userDir: $HOME/.abbozza/
-         * browserFile: The executable of the browser to be used
-         * 
+         * sketchbookDir: The default directory for sketches userDir:
+         * $HOME/.abbozza/ browserFile: The executable of the browser to be used
+         *
          */
-        File installDir = new File(installField.getText());                   
+        File installDir = new File(installField.getText());
         String sketchbookPath = sketchbookField.getText();
         File browserFile = new File(browserField.getText());
         File userDir = new File(System.getProperty("user.home") + "/.abbozza");
-        
-        
+
         /**
          * 1st step: Check if yotta is installed
          */
@@ -390,24 +397,31 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
 
         /**
-         * 3rd step: 
-         * Create directories
+         * 3rd step: Create directories
          */
-        if (!createDir(installDir.getAbsolutePath(),msgDoc)) return;
-        
+        if (!createDir(installDir.getAbsolutePath(), msgDoc)) {
+            return;
+        }
+
         // Do NOT create user or sketchbook dir. 
         // This is done during the first start
         // if (!createDir(userDir.getAbsolutePath(),msgDoc)) return;
         // if (!createDir(sketchbookDir.getAbsolutePath(),msgDoc)) return;
-        
         /**
          * 4th step: Install subdirs lib and build
          */
-        if (!createDir(installDir.getAbsolutePath() + "/lib/",msgDoc)) return;
-        if (!createDir(installDir.getAbsolutePath() + "/plugins/",msgDoc)) return;
-        if (!createDir(installDir.getAbsolutePath() + "/bin/",msgDoc)) return;
-        if (!createDir(installDir.getAbsolutePath() + "/build/",msgDoc)) return;    // used as template for users
-
+        if (!createDir(installDir.getAbsolutePath() + "/lib/", msgDoc)) {
+            return;
+        }
+        if (!createDir(installDir.getAbsolutePath() + "/plugins/", msgDoc)) {
+            return;
+        }
+        if (!createDir(installDir.getAbsolutePath() + "/bin/", msgDoc)) {
+            return;
+        }
+        if (!createDir(installDir.getAbsolutePath() + "/build/", msgDoc)) {
+            return;    // used as template for users
+        }
         // Do NOT create directories in user dir.
         // if (!createDir(userDir.getAbsolutePath() + "/calliopeMP/",msgDoc)) return;
         // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/plugins/",msgDoc)) return;
@@ -415,14 +429,14 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/plugins/",msgDoc)) return;
         // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/build/",msgDoc)) return;
         // if (!createFile(userDir.getAbsolutePath() + "/calliopeC/build/abz_init",msgDoc)) return;
-        
+
         /**
          * 5th step: Backup previous version
          */
         File targetFile = new File(installDir.getAbsolutePath() + "/lib/abbozza-calliope.jar");
         File backup = new File(installDir.getAbsolutePath() + "/lib/abbozza-calliope_" + System.currentTimeMillis() + ".jar_");
         if (targetFile.exists()) {
-            addMsg(msgDoc, AbbozzaLocale.entry("MSG.BACKUP",backup.getAbsolutePath()));
+            addMsg(msgDoc, AbbozzaLocale.entry("MSG.BACKUP", backup.getAbsolutePath()));
             try {
                 Files.move(targetFile.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
@@ -442,7 +456,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          */
         try {
             targetFile.createNewFile();
-            addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/abbozza-calliope.jar"));
+            addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza-calliope.jar"));
             installTool.copyFromJar(installerJar, "lib/abbozza-calliope.jar", installDir + "/lib/abbozza-calliope.jar");
             // Files.copy(installerFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
@@ -456,145 +470,142 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          * 7th step: copy jars and script from installerJar to their locations
          */
         installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
-        
+
         // jssc-2.8.0
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/jssc-2.8.0.jar"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/jssc-2.8.0.jar"));
         installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
         installTool.copyFromJar(installerJar, "lib/license_jssc.txt", installDir + "/lib/license_jssc.txt");
 
         // apache coomons-io
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/commons-io-2.5.jar"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/commons-io-2.5.jar"));
         installTool.copyFromJar(installerJar, "lib/commons-io-2.5.jar", installDir + "/lib/commons-io-2.5.jar");
         installTool.copyFromJar(installerJar, "lib/license_commons-io.txt", installDir + "/lib/license_commons-io.txt");
 
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/rsyntaxtextarea.jar"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/rsyntaxtextarea.jar"));
         installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/rsyntaxtextarea.jar");
         installTool.copyFromJar(installerJar, "lib/license_rsyntaxtextarea.txt", installDir + "/lib/license_rsyntaxtextarea.txt");
 
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/autocomplete.jar"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/autocomplete.jar"));
         installTool.copyFromJar(installerJar, "lib/autocomplete.jar", installDir + "/lib/autocomplete.jar");
         installTool.copyFromJar(installerJar, "lib/license_autocomplete.txt", installDir + "/lib/license_autocomplete.txt");
-        
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/srecord/"));
+
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/srecord/"));
         installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/build/"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/"));
         installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/bin/abbozzaC.[sh|bat]"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/bin/abbozzaMicroPython.[sh|bat]"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMicroPython.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", installDir + "/bin/abbozzaMicroPython.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", installDir + "/bin/abbozzaMicroPython.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/bin/abbozzaMonitor.[sh|bat]"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMonitor.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/abbozza_icon_white"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_white"));
         installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.png", installDir + "/lib/abbozza_icon_white.png");
         installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.ico", installDir + "/lib/abbozza_icon_white.ico");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",installDir + "/lib/abbozza_icon_monitor"));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_monitor"));
         installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.png", installDir + "/lib/abbozza_icon_monitor.png");
         installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.ico", installDir + "/lib/abbozza_icon_monitor.ico");
- 
+
         // Do not copy the build template to the users dir! Wait for compilation!
         // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",userDir + "/calliopeC/build/"));
         // installTool.copyDirFromJar(installerJar, "build/", userDir + "/calliopeC/build/");
-        
         /**
          * 8th step: Add application to menus
          */
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.ADDING_MENU"));
         String scriptSuffix = installTool.getScriptSuffix();
         String iconSuffix = installTool.getIconSuffix();
-        
+
         installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
-            "abbozza! Calliope C",
-            installDir + "/bin/abbozzaC"+ scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
-        
+                "abbozza! Calliope C",
+                installDir + "/bin/abbozzaC" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
+
         installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
-            "abbozza! Calliope MicroPython",
-            installDir + "/bin/abbozzaMicroPython"+scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
+                "abbozza! Calliope MicroPython",
+                installDir + "/bin/abbozzaMicroPython" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
         installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
-            "abbozza! Monitor",
-            installDir + "/bin/abbozzaMonitor"+scriptSuffix, installDir + "/lib/abbozza_icon_monitor" + iconSuffix, globalInstall);
-                
+                "abbozza! Monitor",
+                installDir + "/bin/abbozzaMonitor" + scriptSuffix, installDir + "/lib/abbozza_icon_monitor" + iconSuffix, globalInstall);
+
         /**
          * Write configuration file
-         */        
+         */
         Properties config = new Properties();
         config.setProperty("freshInstall", "true");
-        config.setProperty("browserPath", browserFile.getAbsolutePath() );
-        config.setProperty("installPath", installDir.getAbsolutePath() );
-        config.setProperty("sketchbookPath", sketchbookPath );
-        
+        config.setProperty("browserPath", browserFile.getAbsolutePath());
+        config.setProperty("installPath", installDir.getAbsolutePath());
+        config.setProperty("sketchbookPath", sketchbookPath);
+
         // Do NOT write config file to user dir. Instead write template to lib
         // File prefFile = new File(userDir.getAbsolutePath() + "/calliopeMP/abbozza.cfg");
         File prefFile = new File(installDir.getAbsolutePath() + "/lib/calliopeMP_abbozza.cfg");
-        try {            
+        try {
             prefFile.getParentFile().mkdirs();
             prefFile.createNewFile();
 
             config.store(new FileOutputStream(prefFile), "abbozza! preferences");
-            addMsg(msgDoc,AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()));
+            addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION", prefFile.getAbsolutePath()));
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()),
+            JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION", prefFile.getAbsolutePath()),
                     AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             this.setVisible(false);
             System.exit(1);
         }
 
-        // prefFile = new File(userDir.getAbsolutePath() + "/calliopeC/abbozza.cfg");
         prefFile = new File(installDir.getAbsolutePath() + "/lib/calliopeC_abbozza.cfg");
-        try {            
+        try {
             prefFile.getParentFile().mkdirs();
             prefFile.createNewFile();
 
             config.store(new FileOutputStream(prefFile), "abbozza! preferences");
-            addMsg(msgDoc,AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()));
+            addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION", prefFile.getAbsolutePath()));
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION",prefFile.getAbsolutePath()),
+            JOptionPane.showMessageDialog(this, AbbozzaLocale.entry("MSG.WRITING_CONFIGURATION", prefFile.getAbsolutePath()),
                     AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             this.setVisible(false);
             System.exit(1);
         }
 
         /**
-         * 9th step:
-         * first compile for microbit and calliope
+         * 9th step: first compile for microbit and calliope
          */
         boolean microbitCompiled = false;
         boolean calliopeCompiled = false;
-        
-        if ( yottaInstalled ) {
-            int opt = JOptionPane.showConfirmDialog(this, 
-                    AbbozzaLocale.entry("MSG.PRECOMPILE","Calliope Mini"), 
+
+        if (yottaInstalled) {
+            int opt = JOptionPane.showConfirmDialog(this,
+                    AbbozzaLocale.entry("MSG.PRECOMPILE", "Calliope Mini"),
                     AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
-            if ( opt == JOptionPane.YES_OPTION) {
+            if (opt == JOptionPane.YES_OPTION) {
                 addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_CALLIOPE"));
-                if ( build(installDir.getAbsolutePath() + "/build/calliope/", installDir.getAbsolutePath(),msgDoc ) != 0 ) {
-                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
+                if (build(installDir.getAbsolutePath() + "/build/calliope/", installDir.getAbsolutePath(), msgDoc) != 0) {
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));
                 } else {
-                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));
                     calliopeCompiled = true;
                 }
             }
-            
-            opt = JOptionPane.showConfirmDialog(this, 
-                    AbbozzaLocale.entry("MSG.PRECOMPILE","micro:bit"), 
+
+            opt = JOptionPane.showConfirmDialog(this,
+                    AbbozzaLocale.entry("MSG.PRECOMPILE", "micro:bit"),
                     AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
-            if ( opt == JOptionPane.YES_OPTION) {
-                addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_MICROBIT"));                    
-                if ( build(installDir.getAbsolutePath() + "/build/microbit/", installDir.getAbsolutePath(),msgDoc ) != 0 ) {
-                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));                    
+            if (opt == JOptionPane.YES_OPTION) {
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_MICROBIT"));
+                if (build(installDir.getAbsolutePath() + "/build/microbit/", installDir.getAbsolutePath(), msgDoc) != 0) {
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_FAILED"));
                 } else {
-                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));                                            
+                    addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_SUCCESS"));
                     microbitCompiled = true;
                 }
             }
         }
-        
-        addMsg(msgDoc,AbbozzaLocale.entry("MSG.SUCCESS"));
-                
+
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.SUCCESS"));
+
         logFrame.enableButton();
     }//GEN-LAST:event_installButtonActionPerformed
 
@@ -614,12 +625,12 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         chooser.setFileFilter(new FileFilter() {
 
             @Override
-            public boolean accept(File f) {
+        public boolean accept(File f) {
                 return f.canExecute();
             }
 
             @Override
-            public String getDescription() {
+        public String getDescription() {
                 return AbbozzaLocale.entry("GUI.SELECT_EXECUTABLES");
             }
         });
@@ -665,23 +676,23 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(AbbozzaCalliopeInstaller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
+
         AbbozzaCalliopeInstaller installer = new AbbozzaCalliopeInstaller();
 
         /* Read options */
-        for ( int i = 0; i < args.length; i++ ) {
-            if ( args[i].equals("-global")) {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("-global")) {
                 installer.setGlobal(true);
             }
         }
-        
+
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 installer.setVisible(true);
             }
         });
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -718,12 +729,11 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         return checkPrerequisitesLinux();
     }
-    
-    
+
     private boolean checkPrerequisitesLinux() {
         try {
-            ProcessBuilder procBuilder  = new ProcessBuilder("yt","--version");
-            Process proc = procBuilder.start();            
+            ProcessBuilder procBuilder = new ProcessBuilder("yt", "--version");
+            Process proc = procBuilder.start();
             proc.waitFor();
         } catch (IOException ex) {
             int opt = JOptionPane.showConfirmDialog(this,
@@ -734,15 +744,15 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                 return false;
             }
         } catch (InterruptedException ex) {
+            System.out.println(ex.getLocalizedMessage());
         }
         return true;
     }
 
-    
     private boolean checkPrerequisitesMac() {
         try {
-            ProcessBuilder procBuilder  = new ProcessBuilder("yt","--version");
-            Process proc = procBuilder.start();            
+            ProcessBuilder procBuilder = new ProcessBuilder("yt", "--version");
+            Process proc = procBuilder.start();
             proc.waitFor();
         } catch (IOException ex) {
             int opt = JOptionPane.showConfirmDialog(this,
@@ -757,15 +767,14 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         return true;
     }
 
-    
     private boolean checkPrerequisitesWin() {
         String yottaPath = System.getenv("YOTTA_PATH");
         String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
         try {
-            ProcessBuilder procBuilder  = new ProcessBuilder(yottaInstall+"\\workspace\\Scripts\\yt","--version");
-            procBuilder.environment().put("PATH",yottaPath + ";" + System.getenv("PATH"));
+            ProcessBuilder procBuilder = new ProcessBuilder(yottaInstall + "\\workspace\\Scripts\\yt", "--version");
+            procBuilder.environment().put("PATH", yottaPath + ";" + System.getenv("PATH"));
             procBuilder.inheritIO();
-            Process proc = procBuilder.start();            
+            Process proc = procBuilder.start();
             proc.waitFor();
         } catch (IOException ex) {
             ex.printStackTrace(System.out);
@@ -780,19 +789,18 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         return true;
     }
-    
-    
+
     private int build(String buildPath, String installPath, Document msgDoc) {
-        addMsg(msgDoc,AbbozzaLocale.entry("MSG.COMPILE_IN") + buildPath);
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.COMPILE_IN") + buildPath);
         if (installTool.getSystem().equals("Win")) {
             return buildWin(buildPath, installPath, msgDoc);
         }
-        return buildLinux(buildPath);        
+        return buildLinux(buildPath);
     }
-    
+
     private int buildLinux(String buildPath) {
         try {
-            ProcessBuilder procBuilder = new ProcessBuilder("yt","-n","update");
+            ProcessBuilder procBuilder = new ProcessBuilder("yt", "-n", "update");
             procBuilder.directory(new File(buildPath));
             procBuilder.inheritIO();
             Process proc = procBuilder.start();
@@ -804,12 +812,12 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             return 3;
         }
     }
-    
+
     private int buildWin(String buildPath, String installPath, Document msgDoc) {
         String yottaPath = System.getenv("YOTTA_PATH");
         String yottaInstall = System.getenv("YOTTA_INSTALL_LOCATION");
         try {
-            ProcessBuilder procBuilder  = new ProcessBuilder(yottaInstall+"\\workspace\\Scripts\\yt","-n","update");
+            ProcessBuilder procBuilder = new ProcessBuilder(yottaInstall + "\\workspace\\Scripts\\yt", "-n", "update");
             procBuilder.directory(new File(buildPath));
             procBuilder.environment().put("PATH", installPath + "\\lib\\srecord\\" + ";" + yottaPath + ";" + System.getenv("PATH"));
             // procBuilder.inheritIO();
@@ -817,10 +825,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             Process proc = procBuilder.start();
             InputStream inp = proc.getInputStream();
             BufferedReader buf = new BufferedReader(new InputStreamReader(inp));
-            while ( proc.isAlive() ) {
-                if ( buf.ready() ) {
+            while (proc.isAlive()) {
+                if (buf.ready()) {
                     String line = buf.readLine();
-                    addMsg(msgDoc,line);
+                    addMsg(msgDoc, line);
                 }
             }
             // proc.waitFor();
@@ -837,18 +845,17 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
         return 4;
     }
-    
+
     private void addMsg(Document msgDoc, String text) {
         try {
             msgDoc.insertString(msgDoc.getLength(), text + "\n", null);
         } catch (BadLocationException ex) {
         }
     }
-    
 
     private boolean createDir(String path, Document msgDoc) {
         File buildDir = new File(path);
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR",path));
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CREATING_DIR", path));
         buildDir.mkdirs();
         if (!buildDir.canWrite()) {
             JOptionPane.showMessageDialog(this,
@@ -868,14 +875,14 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             return true;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this,
-            AbbozzaLocale.entry("ERR.CANNOT_WRITE", path),
-            AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
+                    AbbozzaLocale.entry("ERR.CANNOT_WRITE", path),
+                    AbbozzaLocale.entry("ERR.TITLE"), JOptionPane.ERROR_MESSAGE);
             return false;
         }
     }
-    
+
     public void setGlobal(boolean global) {
         globalInstall = global;
     }
-    
+
 }
