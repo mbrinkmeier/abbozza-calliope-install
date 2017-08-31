@@ -86,6 +86,9 @@
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/InstallTool*.class"/>
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/AbbozzaLoggingFrame*.class"/>
         </copy>
+        <copy todir="build/classes/de/uos/inf/did/abbozza/tools/">
+            <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/tools/*.class"/>
+        </copy>
         <copy todir="build/classes/build/calliope">
             <fileset dir="buildsystem/calliope"/>            
         </copy>
