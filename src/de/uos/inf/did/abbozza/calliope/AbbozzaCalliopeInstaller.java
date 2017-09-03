@@ -542,7 +542,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
         // Do NOT write config file to user dir. Instead write template to lib
         // File prefFile = new File(userDir.getAbsolutePath() + "/calliopeMP/abbozza.cfg");
-        File prefFile = new File(installDir.getAbsolutePath() + "/lib/calliopeMP_abbozza.cfg");
+        File prefFile = new File(installDir.getAbsolutePath() + "/lib/calliopeMP.cfg");
         try {
             prefFile.getParentFile().mkdirs();
             prefFile.createNewFile();
@@ -556,7 +556,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             System.exit(1);
         }
 
-        prefFile = new File(installDir.getAbsolutePath() + "/lib/calliopeC_abbozza.cfg");
+        prefFile = new File(installDir.getAbsolutePath() + "/lib/calliopeC.cfg");
         try {
             prefFile.getParentFile().mkdirs();
             prefFile.createNewFile();
