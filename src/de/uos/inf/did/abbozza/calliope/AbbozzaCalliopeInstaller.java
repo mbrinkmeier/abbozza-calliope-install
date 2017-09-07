@@ -374,8 +374,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         /**
          * 1st step: Check if yotta is installed
          */
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CHECKING_PREREQUISITES"));
-        boolean yottaInstalled = checkPrerequisites();
+        // addMsg(msgDoc, AbbozzaLocale.entry("MSG.CHECKING_PREREQUISITES"));
+        // boolean yottaInstalled = checkPrerequisites();
+        boolean yottaInstalled = true;
 
         /**
          * 2nd step: Detect the jar from which installation is done
