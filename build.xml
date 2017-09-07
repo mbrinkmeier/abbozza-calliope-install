@@ -86,16 +86,19 @@
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/InstallTool*.class"/>
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/install/AbbozzaLoggingFrame*.class"/>
         </copy>
+        <copy todir="build/classes/de/uos/inf/did/abbozza/tools/">
+            <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/tools/*.class"/>
+        </copy>
         <copy todir="build/classes/build/calliope">
             <fileset dir="buildsystem/calliope"/>            
         </copy>
-        <copy todir="build/classes/build/calliope" verbose="true">
+        <copy todir="build/classes/build/calliope" verbose="true" overwrite="true">
             <fileset dir="../abbozza-calliope/lib/build/calliope"/>
         </copy>
         <copy todir="build/classes/build/microbit">
             <fileset dir="buildsystem/microbit"/>            
         </copy>
-        <copy todir="build/classes/build/microbit" verbose="true">
+        <copy todir="build/classes/build/microbit" verbose="true" overwrite="true">
             <fileset dir="../abbozza-calliope/lib/build/microbit"/>
         </copy>
     </target>
