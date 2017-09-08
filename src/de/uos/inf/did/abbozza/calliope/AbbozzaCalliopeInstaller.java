@@ -69,12 +69,14 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
     /**
      * Creates new form AbbozzaInstaller
+     * @param global This flag indicates whether abbozza! should be installed globally
      */
-    public AbbozzaCalliopeInstaller() {
+    public AbbozzaCalliopeInstaller(boolean global) {
         // Get the correct install tool
         installTool = InstallTool.getInstallTool();
         isAdmin = installTool.isAdministrator();
-
+        globalInstall = global & isAdmin;
+        
         File installerFile = installTool.getInstallerJar();
         if (installerFile == null) {
             System.exit(1);
@@ -87,6 +89,19 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             System.exit(1);
         }
 
+        // Ask for global install if administrator
+        if ( isAdmin && !globalInstall ) {
+            int result = JOptionPane.showConfirmDialog(null, AbbozzaLocale.entry("GUI.ASK_FOR_GLOBAL_INSTALL"),"abbozza! Calliope",JOptionPane.YES_NO_CANCEL_OPTION);
+            if ( result == JOptionPane.CANCEL_OPTION ) {
+                System.exit(0);
+            } else if ( result == JOptionPane.NO_OPTION ) {
+                globalInstall = true;
+            } else {
+                globalInstall = false;
+            }
+        }
+                
+
         initComponents();
 
         String osname = System.getProperty("os.name").toLowerCase();
@@ -97,6 +112,11 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             browserButton.setEnabled(true);
         }
 
+        // Change default settings if local install
+        if (!globalInstall) {
+            this.sketchbookField.setText(System.getProperty("user.home")+"/abbozza");
+        }
+        
         this.setTitle(AbbozzaLocale.entry("GUI.TITLE"));
 
         InstallTool.centerWindow(this);
@@ -133,6 +153,12 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
     }
 
+    
+    public AbbozzaCalliopeInstaller() {
+        this(false);
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -208,7 +234,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         mainPanel.add(jScrollPane1, gridBagConstraints);
 
-        installField.setText(System.getProperty("user.home")+"/abbozza");
+        installField.setText(installTool.getInstallPath(globalInstall));
         installField.setToolTipText("Das Sketchbook-Verzeichnis");
         installField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -372,21 +398,25 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         /**
          * 0th step: Fetch the directories
          *
-         * installDir : The directory to which abbozza! is installed
+         * installDir : The directory to which abbozza! is installed, expand %HOME%
          * sketchbookDir: The default directory for sketches userDir:
          * $HOME/.abbozza/ browserFile: The executable of the browser to be used
          *
          */
-        File installDir = new File(installField.getText());
+        File userInstallDir = new File(installTool.expandPath(installField.getText()));
         String sketchbookPath = sketchbookField.getText();
         File browserFile = new File(browserField.getText());
         File userDir = new File(System.getProperty("user.home") + "/.abbozza");
-
+        
+        // Adapt the install dir, depending on the system
+        File installDir = installTool.adaptUserInstallDir(userInstallDir);
+                
         /**
          * 1st step: Check if yotta is installed
          */
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.CHECKING_PREREQUISITES"));
-        boolean yottaInstalled = checkPrerequisites();
+        // addMsg(msgDoc, AbbozzaLocale.entry("MSG.CHECKING_PREREQUISITES"));
+        // boolean yottaInstalled = checkPrerequisites();
+        boolean yottaInstalled = true;
 
         /**
          * 2nd step: Detect the jar from which installation is done
@@ -407,6 +437,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         // This is done during the first start
         // if (!createDir(userDir.getAbsolutePath(),msgDoc)) return;
         // if (!createDir(sketchbookDir.getAbsolutePath(),msgDoc)) return;
+        
         /**
          * 4th step: Install subdirs lib and build
          */
@@ -423,12 +454,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             return;    // used as template for users
         }
         // Do NOT create directories in user dir.
-        // if (!createDir(userDir.getAbsolutePath() + "/calliopeMP/",msgDoc)) return;
-        // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/plugins/",msgDoc)) return;
-        // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/",msgDoc)) return;
-        // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/plugins/",msgDoc)) return;
-        // if (!createDir(userDir.getAbsolutePath() + "/calliopeC/build/",msgDoc)) return;
-        // if (!createFile(userDir.getAbsolutePath() + "/calliopeC/build/abz_init",msgDoc)) return;
 
         /**
          * 5th step: Backup previous version
@@ -537,7 +562,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         Properties config = new Properties();
         config.setProperty("freshInstall", "true");
         config.setProperty("browserPath", browserFile.getAbsolutePath());
-        config.setProperty("installPath", installDir.getAbsolutePath());
+        config.setProperty("installPath", userInstallDir.getAbsolutePath());
         config.setProperty("sketchbookPath", sketchbookPath);
 
         // Do NOT write config file to user dir. Instead write template to lib
@@ -677,14 +702,15 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(AbbozzaCalliopeInstaller.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
-        AbbozzaCalliopeInstaller installer = new AbbozzaCalliopeInstaller();
-
         /* Read options */
+        boolean global = false;
         for (int i = 0; i < args.length; i++) {
             if (args[i].equals("-global")) {
-                installer.setGlobal(true);
+                global = true;
             }
         }
+
+        AbbozzaCalliopeInstaller installer = new AbbozzaCalliopeInstaller(global);
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -755,6 +781,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             Process proc = procBuilder.start();
             proc.waitFor();
         } catch (IOException ex) {
+            System.err.println(ex.getLocalizedMessage());
             int opt = JOptionPane.showConfirmDialog(this,
                     AbbozzaLocale.entry("ERR.YOTTA_MISSING") + "\n"
                     + AbbozzaLocale.entry("MSG.CONTINUE_INSTALLATION"),

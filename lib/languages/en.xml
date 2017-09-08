@@ -17,6 +17,9 @@ abbozza! Calliope requires:
 Thank you for using abbozza! Calliope
         
 The abbozza! Team </msg>
+    <msg id="GUI.ASK_FOR_GLOBAL_INSTALL">You've got administrative rights.
+
+Should abbozza! be installed only for the current user?</msg>    
     <msg id="MSG.ALREADY_INSTALLED">abbozza! Calliope is installed already!</msg>
     <msg id="MSG.CONTINUE_INSTALLATION">Continue installation?</msg>
     <msg id="ERR.TITLE">Error!</msg>
