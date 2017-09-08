@@ -565,6 +565,25 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             } catch (IOException ex) {
                 addMsg(msgDoc,"Could not create " + starter.getAbsolutePath());
             }
+
+            installDir2 = userInstallDir.getParent()+"/abbozzaMonitor.app/Contents/MacOS/";
+            installDir3 = userInstallDir.getParent()+"/abbozzaMonitor.app/Contents/";
+            createDir(installDir2,msgDoc);
+            installTool.copyFromJar(installerJar,"lib/abbozza_monitor.icns",installDir.getAbsolutePath()+"/abbozza_monitor.icns");
+            installTool.copyFromJar(installerJar,"lib/Infomonitor.plist",installDir3+"/Info.plist");
+            createFile(installDir2 + "abbozzaMonitor",msgDoc);
+            starter = new File(installDir2 + "abbozzaMonitor");
+            try {
+                writer = new FileWriter(starter);
+                writer.append("#!/bin/bash\n\n");
+                writer.append("cd " + installDir.getAbsolutePath() + "/bin\n");
+                writer.append("./abbozzaMonitor.sh");
+                starter.setExecutable(true);
+                writer.close();
+            } catch (IOException ex) {
+                addMsg(msgDoc,"Could not create " + starter.getAbsolutePath());
+            }
+
         } else {
             installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
                 "abbozza! Calliope C",
