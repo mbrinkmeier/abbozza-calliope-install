@@ -31,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -405,7 +406,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          */
         File userInstallDir = new File(installTool.expandPath(installField.getText()));
         String sketchbookPath = sketchbookField.getText();
-        File browserFile = new File(browserField.getText());
+        String browserPath = browserField.getText();
         File userDir = new File(System.getProperty("user.home") + "/.abbozza");
         
         // Adapt the install dir, depending on the system
@@ -544,24 +545,45 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         String scriptSuffix = installTool.getScriptSuffix();
         String iconSuffix = installTool.getIconSuffix();
 
-        installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
+        if ( installTool.getSystem().equals("Mac") ) {
+            // Create Contents/MacOS
+            String installDir2 = userInstallDir.getAbsolutePath()+"/Contents/MacOS/";
+            String installDir3 = userInstallDir.getAbsolutePath()+"/Contents/";
+            createDir(installDir2,msgDoc);
+            installTool.copyFromJar(installerJar,"lib/abbozza.icns",installDir.getAbsolutePath()+"/abbozza.icns");
+            installTool.copyFromJar(installerJar,"lib/Info.plist",installDir3+"/Info.plist");
+            createFile(installDir2 + "abbozza",msgDoc);
+            File starter = new File(installDir2 + "abbozza");
+            FileWriter writer;
+            try {
+                writer = new FileWriter(starter);
+                writer.append("#!/bin/bash\n\n");
+                writer.append("cd " + installDir.getAbsolutePath() + "/bin\n");
+                writer.append("./abbozzaC.sh");
+                starter.setExecutable(true);
+                writer.close();
+            } catch (IOException ex) {
+                addMsg(msgDoc,"Could not create " + starter.getAbsolutePath());
+            }
+        } else {
+            installTool.addAppToMenu("abbozzaCalliopeC", "abbozza! Calliope C",
                 "abbozza! Calliope C",
                 installDir + "/bin/abbozzaC" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
-        installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
+            installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
                 "abbozza! Calliope MicroPython",
                 installDir + "/bin/abbozzaMicroPython" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
-        installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
+            installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
                 "abbozza! Monitor",
                 installDir + "/bin/abbozzaMonitor" + scriptSuffix, installDir + "/lib/abbozza_icon_monitor" + iconSuffix, globalInstall);
-
+        }
         /**
          * Write configuration file
          */
         Properties config = new Properties();
         config.setProperty("freshInstall", "true");
-        config.setProperty("browserPath", browserFile.getAbsolutePath());
+        config.setProperty("browserPath", browserPath);
         config.setProperty("installPath", userInstallDir.getAbsolutePath());
         config.setProperty("sketchbookPath", sketchbookPath);
 
