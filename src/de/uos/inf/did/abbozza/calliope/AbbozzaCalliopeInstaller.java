@@ -569,8 +569,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             installDir2 = userInstallDir.getParent()+"/abbozzaMonitor.app/Contents/MacOS/";
             installDir3 = userInstallDir.getParent()+"/abbozzaMonitor.app/Contents/";
             createDir(installDir2,msgDoc);
-            installTool.copyFromJar(installerJar,"lib/abbozza_monitor.icns",installDir.getAbsolutePath()+"/abbozza_monitor.icns");
-            installTool.copyFromJar(installerJar,"lib/Infomonitor.plist",installDir3+"/Info.plist");
+            createDir(installDir3+"Resources",msgDoc);
+            installTool.copyFromJar(installerJar,"lib/abbozza_monitor.icns",installDir3+"Resources/abbozza_monitor.icns");
+            installTool.copyFromJar(installerJar,"lib/Info.monitor.plist",installDir3+"/Info.plist");
             createFile(installDir2 + "abbozzaMonitor",msgDoc);
             starter = new File(installDir2 + "abbozzaMonitor");
             try {
