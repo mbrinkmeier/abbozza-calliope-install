@@ -505,9 +505,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.copyFromJar(installerJar, "lib/license_autocomplete.txt", installDir + "/lib/license_autocomplete.txt");
 
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/srecord/"));
-        installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
+        installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");        
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/"));
-        installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/");
+        installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/",true);
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
