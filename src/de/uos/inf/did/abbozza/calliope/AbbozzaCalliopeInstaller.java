@@ -372,7 +372,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
         final AbbozzaLoggingFrame logFrame = new AbbozzaLoggingFrame();
         
-        java.awt.EventQueue.invokeLater(new Runnable() {
+        
+        SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 logFrame.setDocument(msgDoc);
                 logFrame.setVisible(true);
