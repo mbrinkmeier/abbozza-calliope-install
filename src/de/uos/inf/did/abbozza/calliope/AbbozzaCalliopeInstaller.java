@@ -380,9 +380,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             }
         });
 
-        
-
-        // Thread loggerThread = new Thread(logFrame);
+                // Thread loggerThread = new Thread(logFrame);
         // loggerThread.start();
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
 
@@ -487,6 +485,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
          */
         installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
 
+        // buildbase
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/buildbase.jar"));
+        installTool.copyFromJar(installerJar, "lib/buildbase.jar", installDir + "/lib/buildbase.jar");
+        
         // jssc-2.8.0
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/jssc-2.8.0.jar"));
         installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");

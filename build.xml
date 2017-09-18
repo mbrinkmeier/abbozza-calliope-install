@@ -89,17 +89,20 @@
         <copy todir="build/classes/de/uos/inf/did/abbozza/tools/">
             <fileset file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/tools/*.class"/>
         </copy>
-        <copy todir="build/classes/build/calliope">
+        <!--copy todir="build/classes/build/calliope">
             <fileset dir="buildsystem/calliope"/>            
-        </copy>
+        </copy-->
         <copy todir="build/classes/build/calliope" verbose="true" overwrite="true">
             <fileset dir="../abbozza-calliope/lib/build/calliope"/>
         </copy>
-        <copy todir="build/classes/build/microbit">
+        <!--copy todir="build/classes/build/microbit">
             <fileset dir="buildsystem/microbit"/>            
-        </copy>
+        </copy-->
         <copy todir="build/classes/build/microbit" verbose="true" overwrite="true">
             <fileset dir="../abbozza-calliope/lib/build/microbit"/>
         </copy>
+        <jar destfile="build/classes/lib/buildbase.jar">
+            <fileset dir="buildsystem/"/>
+        </jar>
     </target>
 </project>
