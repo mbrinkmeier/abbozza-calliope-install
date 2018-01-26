@@ -127,7 +127,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         if (aD.exists()) {
             int result = JOptionPane.showConfirmDialog(this,
                     AbbozzaLocale.entry("MSG.ALREADY_INSTALLED") + "\n"
-                    + AbbozzaLocale.entry("MSG.CONTINUE_INSTALLATION") + "\n" + "( Version " + AbbozzaCalliope.SYS_VERSION + ")",
+                    + AbbozzaLocale.entry("MSG.CONTINUE_INSTALLATION") + "\n" + "( Version " + AbbozzaCalliope.SYS_VERSION + " )",
                     AbbozzaLocale.entry("GUI.TITLE"), JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.NO_OPTION) {
                 System.exit(1);
