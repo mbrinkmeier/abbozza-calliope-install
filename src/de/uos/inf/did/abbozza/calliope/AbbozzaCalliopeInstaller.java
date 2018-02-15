@@ -21,7 +21,7 @@
  */
 package de.uos.inf.did.abbozza.calliope;
 
-import de.uos.inf.did.abbozza.AbbozzaLocale;
+import de.uos.inf.did.abbozza.core.AbbozzaLocale;
 import de.uos.inf.did.abbozza.install.AbbozzaLoggingFrame;
 import de.uos.inf.did.abbozza.install.InstallTool;
 import java.io.BufferedReader;
