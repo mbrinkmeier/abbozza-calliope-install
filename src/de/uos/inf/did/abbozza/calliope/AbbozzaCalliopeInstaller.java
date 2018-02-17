@@ -512,10 +512,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/",true);
         
         // Copy common libraries into buildsystem
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/calliope/source/lib/"));
-        installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/calliope/source/lib/",false);
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/microbit/source/lib/"));
-        installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/microbit/source/lib/",false);
+        // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/calliope/source/lib/"));
+        // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/calliope/source/lib/",false);
+        // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/microbit/source/lib/"));
+        // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/microbit/source/lib/",false);
         
         // Scripts
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));

@@ -95,7 +95,13 @@
         <copy todir="build/classes/build/microbit" verbose="true" overwrite="true">
             <fileset dir="../abbozza-calliope/lib/build/microbit/"/>
         </copy>
-        <copy todir="build/classes/build/common" verbose="true" overwrite="true">
+        <!-- copy todir="build/classes/build/common" verbose="true" overwrite="true">
+            <fileset dir="../abbozza-calliope/lib/build/common/"/>
+        </copy -->
+        <copy todir="build/classes/build/microbit/source/" verbose="true" overwrite="true">
+            <fileset dir="../abbozza-calliope/lib/build/common/"/>
+        </copy>
+        <copy todir="build/classes/build/calliope/source/" verbose="true" overwrite="true">
             <fileset dir="../abbozza-calliope/lib/build/common/"/>
         </copy>
 
