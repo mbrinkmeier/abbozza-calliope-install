@@ -591,9 +591,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                 "abbozza! Calliope C",
                 installDir + "/bin/abbozzaC" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
-            installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
-                "abbozza! Calliope MicroPython",
-                installDir + "/bin/abbozzaMicroPython" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
+            // installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
+            //     "abbozza! Calliope MicroPython",
+            //     installDir + "/bin/abbozzaMicroPython" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
             installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
                 "abbozza! Monitor",
