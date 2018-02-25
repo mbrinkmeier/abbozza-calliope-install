@@ -78,7 +78,7 @@
     
     
     <target name="-pre-jar">
-        <copy todir="build/classes/de/uos/inf/did/abbozza/">
+        <copy todir="build/classes/de/uos/inf/did/abbozza/core/">
             <file file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/core/AbbozzaLocale.class"/>
             <file file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/core/AbbozzaLogger.class"/>
         </copy>        
