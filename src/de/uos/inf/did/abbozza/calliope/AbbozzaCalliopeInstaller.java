@@ -21,7 +21,7 @@
  */
 package de.uos.inf.did.abbozza.calliope;
 
-import de.uos.inf.did.abbozza.AbbozzaLocale;
+import de.uos.inf.did.abbozza.core.AbbozzaLocale;
 import de.uos.inf.did.abbozza.install.AbbozzaLoggingFrame;
 import de.uos.inf.did.abbozza.install.InstallTool;
 import java.io.BufferedReader;
@@ -45,8 +45,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
 /**
- *
- * @author michael
+ * The Calliope Installer frame. 
  */
 public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
@@ -55,6 +54,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
     private boolean isAdmin;
     private JarFile installerJar;
     private boolean globalInstall = false;
+
 
     /**
      * Creates new form AbbozzaInstaller
@@ -109,13 +109,6 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         this.setTitle(AbbozzaLocale.entry("GUI.TITLE"));
 
         InstallTool.centerWindow(this);
-        /*
-         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-         int x = (screen.width - getWidth()) / 2;
-         int y = (screen.height - getHeight()) / 2;
-         setLocation(x, y);
-         */
 
         JRootPane rootPane = SwingUtilities.getRootPane(installButton);
         rootPane.setDefaultButton(installButton);
@@ -142,7 +135,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         }
     }
 
-    
+    /**
+     * Standardconstructor for the installer frame
+     */
     public AbbozzaCalliopeInstaller() {
         this(false);
     }
@@ -498,18 +493,31 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         installTool.copyFromJar(installerJar, "lib/commons-io-2.5.jar", installDir + "/lib/commons-io-2.5.jar");
         installTool.copyFromJar(installerJar, "lib/license_commons-io.txt", installDir + "/lib/license_commons-io.txt");
 
+        // rsyntaxarea
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/rsyntaxtextarea.jar"));
         installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/rsyntaxtextarea.jar");
         installTool.copyFromJar(installerJar, "lib/license_rsyntaxtextarea.txt", installDir + "/lib/license_rsyntaxtextarea.txt");
 
+        // autocomplete
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/autocomplete.jar"));
         installTool.copyFromJar(installerJar, "lib/autocomplete.jar", installDir + "/lib/autocomplete.jar");
         installTool.copyFromJar(installerJar, "lib/license_autocomplete.txt", installDir + "/lib/license_autocomplete.txt");
 
+        // srecord
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/srecord/"));
         installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");        
+        
+        // The build system
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/"));
         installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/",true);
+        
+        // Copy common libraries into buildsystem
+        // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/calliope/source/lib/"));
+        // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/calliope/source/lib/",false);
+        // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/microbit/source/lib/"));
+        // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/microbit/source/lib/",false);
+        
+        // Scripts
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
@@ -519,6 +527,8 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMonitor.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
         installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
+        
+        // Icons
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_white"));
         installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.png", installDir + "/lib/abbozza_icon_white.png");
         installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.ico", installDir + "/lib/abbozza_icon_white.ico");
@@ -581,9 +591,9 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                 "abbozza! Calliope C",
                 installDir + "/bin/abbozzaC" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
-            installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
-                "abbozza! Calliope MicroPython",
-                installDir + "/bin/abbozzaMicroPython" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
+            // installTool.addAppToMenu("abbozzaCalliopeMicroPython", "abbozza! Calliope MicroPython",
+            //     "abbozza! Calliope MicroPython",
+            //     installDir + "/bin/abbozzaMicroPython" + scriptSuffix, installDir + "/lib/abbozza_icon_white" + iconSuffix, globalInstall);
 
             installTool.addAppToMenu("abbozzaMonitor", "abbozza! Monitor",
                 "abbozza! Monitor",
