@@ -559,6 +559,10 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
             try {
                 writer = new FileWriter(starter);
                 writer.append("#!/bin/bash\n\n");
+                writer.append("CWD=" + installDir.getAbsolutePath() + "\n");
+                writer.append("YOTTA_PATH=\"$CWD/prerequisites:$CWD/prerequisites/gcc-arm-none-eabi-4_9-2015q3/bin:$CWD/prerequisites/CMake.app/Contents/bin:$CWD/workspace/bin\"\n");
+                writer.append("export PATH=$YOTTA_PATH:$PATH\n");
+                writer.append("export YOTTA_CWD=\"$CWD\"\n");
                 writer.append("cd " + installDir.getAbsolutePath() + "/bin\n");
                 writer.append("./abbozzaC.sh");
                 starter.setExecutable(true);
