@@ -1,20 +1,21 @@
 #!/bin/bash
 
-# Clone the github repositories
+# prepare calliope
 cd calliope
 yt clean
 yt update
+rm -r source/*
+cp -r ../../../abbozza-calliope/lib/build/calliope/* .
+cp -r ../../../abbozza-calliope/lib/build/common/* source
+yt build
+
 cd ../microbit
 yt clean
 yt update
+rm -r source/*
+cp -r ../../../abbozza-calliope/lib/build/microbit/* .
+cp -r ../../../abbozza-calliope/lib/build/common/* source
+# yt build
 
 cd ..
-
-# Remove unused files
-rm -r calliope/source/*
-rm -r microbit/source/*
-
-## Copy the abbozza specific files
-cp -r ../../abbozza-calliope/lib/build/calliope/* calliope
-cp -r ../../abbozza-calliope/lib/build/microbit/* microbit
 
