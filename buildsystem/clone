@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Clone the github repositories
-git clone https://github.com/calliope-mini/calliope-demo.git calliope
-git clone https://github.com/lancaster-university/microbit-samples.git microbit
+git clone https://github.com/mbrinkmeier/abbozza-build-calliope.git calliope
+git clone https://github.com/mbrinkmeier/abbozza-build-microbit.git microbit
 
 # Remove unused files
 rm -r calliope/source/*
