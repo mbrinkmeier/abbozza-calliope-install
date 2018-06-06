@@ -8,7 +8,7 @@ if [ -d ../tools ]; then
   export PATH=`pwd`/../cwtoolslinux/bin:`pwd`/../bin:$PATH
 
   # Activate virtualenv
-  cd cwtoolslinux
+  cd ../tools
   . bin/activate
 
   # start java

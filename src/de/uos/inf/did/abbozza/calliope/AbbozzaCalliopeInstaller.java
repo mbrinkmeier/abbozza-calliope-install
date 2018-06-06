@@ -517,6 +517,11 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/microbit/source/lib/"));
         // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/microbit/source/lib/",false);
         
+        // Tools
+        String osname = System.getProperty("os.name").toLowerCase();
+        installTool.copyDirFromJar(installerJar, "tools/" + osname + "/"  ,installDir + "/tools/", true);
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/tools/"));                    
+        
         // Scripts
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
         installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
