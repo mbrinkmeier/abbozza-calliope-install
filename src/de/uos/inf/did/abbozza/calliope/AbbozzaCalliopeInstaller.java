@@ -590,11 +590,11 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/microbit/source/lib/",false);
         
         // Tools
+        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/tools/")); 
         runner = new Runnable() {
             @Override
             public void run() {
                 String osname = System.getProperty("os.name").toLowerCase();
-                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/tools/")); 
                 installTool.copyFromJar(installerJar, "tools.zip" ,installDir + "/tools.zip");
                 try {
                     ZipFile zip = new ZipFile(installDir + "/tools.zip");
@@ -613,7 +613,7 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
                     BufferedReader execs = new BufferedReader(new FileReader(installDir + "/tools/.executables"));
                     while ( execs.ready() ) {
                         String exe = execs.readLine();
-                        addMsg(msgDoc, "Making " + exe + " executable");
+                        // addMsg(msgDoc, "Making " + exe + " executable");
                         File exef = new File(installDir + "/" + exe);
                         exef.setExecutable(true);
                     }
