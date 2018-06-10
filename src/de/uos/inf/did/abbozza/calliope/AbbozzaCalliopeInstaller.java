@@ -28,14 +28,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Enumeration;
 import java.util.Properties;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
@@ -360,21 +367,32 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
 
     private void installButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_installButtonActionPerformed
 
+        Runnable runner;
         Document msgDoc = msgPanel.getDocument();
 
         this.setVisible(false);
 
         final AbbozzaLoggingFrame logFrame = new AbbozzaLoggingFrame();
         
+        Runnable frameRunner = new Runnable() {
+            @Override
+            public void run() {
+                logFrame.setDocument(msgDoc);
+                logFrame.setVisible(true);
+            }            
+        };
+        frameRunner.run();
         
+        /* 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 logFrame.setDocument(msgDoc);
                 logFrame.setVisible(true);
             }
         });
+        */
 
-                // Thread loggerThread = new Thread(logFrame);
+        // Thread loggerThread = new Thread(logFrame);
         // loggerThread.start();
         addMsg(msgDoc, "\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
 
@@ -465,7 +483,13 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         try {
             targetFile.createNewFile();
             addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza-calliope.jar"));
-            installTool.copyFromJar(installerJar, "lib/abbozza-calliope.jar", installDir + "/lib/abbozza-calliope.jar");
+            runner = new Runnable() {
+                @Override
+                public void run() {
+                    installTool.copyFromJar(installerJar, "lib/abbozza-calliope.jar", installDir + "/lib/abbozza-calliope.jar");
+                }
+            };
+            runner.run();
             // Files.copy(installerFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this,
@@ -477,39 +501,87 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         /**
          * 7th step: copy jars and script from installerJar to their locations
          */
-        installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
+            }
+        };
+        runner.run();
 
         // buildbase
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/buildbase.jar"));
-        installTool.copyFromJar(installerJar, "lib/buildbase.jar", installDir + "/lib/buildbase.jar");
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyFromJar(installerJar, "lib/buildbase.jar", installDir + "/lib/buildbase.jar");
+            }
+        };
+        runner.run();
         
         // jssc-2.8.0
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/jssc-2.8.0.jar"));
-        installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
-        installTool.copyFromJar(installerJar, "lib/license_jssc.txt", installDir + "/lib/license_jssc.txt");
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyFromJar(installerJar, "lib/jssc-2.8.0.jar", installDir + "/lib/jssc-2.8.0.jar");
+                installTool.copyFromJar(installerJar, "lib/license_jssc.txt", installDir + "/lib/license_jssc.txt");
+            }
+        };
+        runner.run();
 
         // apache coomons-io
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/commons-io-2.5.jar"));
-        installTool.copyFromJar(installerJar, "lib/commons-io-2.5.jar", installDir + "/lib/commons-io-2.5.jar");
-        installTool.copyFromJar(installerJar, "lib/license_commons-io.txt", installDir + "/lib/license_commons-io.txt");
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyFromJar(installerJar, "lib/commons-io-2.5.jar", installDir + "/lib/commons-io-2.5.jar");
+                installTool.copyFromJar(installerJar, "lib/license_commons-io.txt", installDir + "/lib/license_commons-io.txt");
+            }
+        };
+        runner.run();
 
         // rsyntaxarea
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/rsyntaxtextarea.jar"));
-        installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/rsyntaxtextarea.jar");
-        installTool.copyFromJar(installerJar, "lib/license_rsyntaxtextarea.txt", installDir + "/lib/license_rsyntaxtextarea.txt");
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyFromJar(installerJar, "lib/rsyntaxtextarea.jar", installDir + "/lib/rsyntaxtextarea.jar");
+                installTool.copyFromJar(installerJar, "lib/license_rsyntaxtextarea.txt", installDir + "/lib/license_rsyntaxtextarea.txt");
+            }
+        };
+        runner.run();
 
         // autocomplete
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/autocomplete.jar"));
-        installTool.copyFromJar(installerJar, "lib/autocomplete.jar", installDir + "/lib/autocomplete.jar");
-        installTool.copyFromJar(installerJar, "lib/license_autocomplete.txt", installDir + "/lib/license_autocomplete.txt");
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyFromJar(installerJar, "lib/autocomplete.jar", installDir + "/lib/autocomplete.jar");
+                installTool.copyFromJar(installerJar, "lib/license_autocomplete.txt", installDir + "/lib/license_autocomplete.txt");
+            }
+        };
+        runner.run();
 
         // srecord
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/srecord/"));
-        installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");        
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");        
+            }
+        };
+        runner.run();
         
         // The build system
         addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/"));
-        installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/",true);
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                installTool.copyDirFromJar(installerJar, "build/", installDir + "/build/",true);
+            }
+        };
+        runner.run();
         
         // Copy common libraries into buildsystem
         // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/build/calliope/source/lib/"));
@@ -518,28 +590,59 @@ public class AbbozzaCalliopeInstaller extends javax.swing.JFrame {
         // installTool.copyDirFromJar(installerJar, "build/common/lib/", installDir + "/build/microbit/source/lib/",false);
         
         // Tools
-        String osname = System.getProperty("os.name").toLowerCase();
-        installTool.copyDirFromJar(installerJar, "tools/" + osname + "/"  ,installDir + "/tools/", true);
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/tools/"));                    
+        runner = new Runnable() {
+            @Override
+            public void run() {
+                String osname = System.getProperty("os.name").toLowerCase();
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/tools/")); 
+                installTool.copyFromJar(installerJar, "tools.zip" ,installDir + "/tools.zip");
+                try {
+                    ZipFile zip = new ZipFile(installDir + "/tools.zip");
+                    Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
+                    while ( entries.hasMoreElements() ) {
+                        ZipEntry entry = entries.nextElement();
+                        String name = entry.getName();
+                        File target = new File(installDir + "/" + name);
+                        if (entry.isDirectory()) {
+                            target.mkdir();
+                        } else {
+                            Files.copy(zip.getInputStream(entry), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        }
+                    }
+                    
+                    BufferedReader execs = new BufferedReader(new FileReader(installDir + "/tools/.executables"));
+                    while ( execs.ready() ) {
+                        String exe = execs.readLine();
+                        addMsg(msgDoc, "Making " + exe + " executable");
+                        File exef = new File(installDir + "/" + exe);
+                        exef.setExecutable(true);
+                    }
+                } catch (IOException ex) {
+                    addMsg(msgDoc, ex.getLocalizedMessage());
+                }
+                
         
-        // Scripts
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMicroPython.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", installDir + "/bin/abbozzaMicroPython.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", installDir + "/bin/abbozzaMicroPython.bat");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMonitor.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
+                // Scripts
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
+                installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
+                installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMicroPython.[sh|bat]"));
+                installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", installDir + "/bin/abbozzaMicroPython.sh");
+                installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", installDir + "/bin/abbozzaMicroPython.bat");
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMonitor.[sh|bat]"));
+                installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
+                installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
         
-        // Icons
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_white"));
-        installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.png", installDir + "/lib/abbozza_icon_white.png");
-        installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.ico", installDir + "/lib/abbozza_icon_white.ico");
-        addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_monitor"));
-        installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.png", installDir + "/lib/abbozza_icon_monitor.png");
-        installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.ico", installDir + "/lib/abbozza_icon_monitor.ico");
+                // Icons
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_white"));
+                installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.png", installDir + "/lib/abbozza_icon_white.png");
+                installTool.copyFromJar(installerJar, "lib/abbozza_icon_white.ico", installDir + "/lib/abbozza_icon_white.ico");
+                addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_monitor"));
+                installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.png", installDir + "/lib/abbozza_icon_monitor.png");
+                installTool.copyFromJar(installerJar, "lib/abbozza_icon_monitor.ico", installDir + "/lib/abbozza_icon_monitor.ico");
+            }
+        };
+        runner.run();
 
         // Do not copy the build template to the users dir! Wait for compilation!
         // addMsg(msgDoc, AbbozzaLocale.entry("MSG.WRITING",userDir + "/calliopeC/build/"));
