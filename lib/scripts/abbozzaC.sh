@@ -5,7 +5,7 @@
 # Check if ../tools exists
 if [ -d ../tools ]; then
   # Setting PATH
-  export PATH=`pwd`/../cwtoolslinux/bin:`pwd`/../bin:$PATH
+  export PATH=`pwd`/../tools/bin:`pwd`../tools/arm-none-eabi/bin:`pwd`:$PATH
 
   # Activate virtualenv
   cd ../tools
