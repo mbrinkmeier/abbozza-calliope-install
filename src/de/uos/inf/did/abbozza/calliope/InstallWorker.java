@@ -228,11 +228,11 @@ public class InstallWorker extends SwingWorker<String, String> {
 
         try {
             installTool.copyFromJar(installerJar, "tools.zip", installDir + "/tools.zip");
-            zip = new ZipFile(installDir + "/tools.zip");
         } catch (Exception ex) {
-            publish(installDir + "/tools.zip not found");
+            publish("tools.zip not in archive");
         }
 
+        zip = new ZipFile(installDir + "/tools.zip");
         if (zip != null) {
             try {
                 int progress = 0;
