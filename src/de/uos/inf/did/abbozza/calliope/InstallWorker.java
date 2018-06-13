@@ -56,9 +56,9 @@ public class InstallWorker extends SwingWorker<String, String> {
     
     /**
      *
-     * @param msgs
-     * @throws java.lang.Exception
+     * @param msgs The published nessages
      */
+    @Override
     protected void process(List<String> msgs) {
         for (String msg : msgs) {
             try {
