@@ -7,7 +7,7 @@ yt update
 rm -r source/*
 cp -r ../../../abbozza-calliope/lib/build/calliope/* .
 cp -r ../../../abbozza-calliope/lib/build/common/* source
-yt build
+# yt build
 
 cd ../microbit
 yt clean
