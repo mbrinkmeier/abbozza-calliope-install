@@ -1,5 +1,8 @@
 #!/bin/bash
 
+rm -rf calliope
+rm -rf microbit
+
 # Clone the github repositories
 git clone https://github.com/mbrinkmeier/abbozza-build-calliope.git calliope
 git clone https://github.com/mbrinkmeier/abbozza-build-microbit.git microbit
