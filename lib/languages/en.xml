@@ -42,4 +42,5 @@ Should abbozza! be installed only for the current user?</msg>
 Download latest sources for the #?
 (requires connection to the internet)                
     </msg>
+    <msg id="MSG.SET_PERMISSION">... Set tool permissions</msg>
 </language>

@@ -46,4 +46,5 @@ Soll abbozza! Calliope nur für den aktuellen Nutzer installiert werden?</msg>
 Die aktuellsten Quellen für den # herunterladen?
 (erfordert eine Internetverbindung)                
     </msg>
+    <msg id="MSG.SET_PERMISSION">... Setze Rechte für Werkzeuge</msg>
 </language>
