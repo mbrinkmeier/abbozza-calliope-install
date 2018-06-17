@@ -5,4 +5,3 @@ set PATH=%ENV_PATH%\bin;%ENV_PATH%\arm-none-eabi\bin;%ENV_PATH%\Python;%ENV_PATH
 
 javaw -cp ..\lib\jssc-2.8.0.jar;..\lib\rsyntaxtextarea.jar;..\lib\autocomplete.jar;..\lib\abbozza-calliope.jar;..\lib\commons-io-2.5.jar de.uos.inf.did.abbozza.calliope.AbbozzaCalliopeC
 
-deactivate
