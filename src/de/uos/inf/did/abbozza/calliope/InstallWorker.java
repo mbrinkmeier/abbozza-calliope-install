@@ -87,7 +87,7 @@ public class InstallWorker extends SwingWorker<String, String> {
     
     /**
      *
-     * @throws Exception
+     * @throws Exception thrown is exection occurred during execution
      */
     @Override
     protected String doInBackground() throws Exception {
