@@ -69,15 +69,13 @@
     properties which you can use, check the target you are overriding in the
     nbproject/build-impl.xml file. 
 
-    --> 
-    <target name="-pre-compile">
-        <copy todir="lib/lib/">
-            <file file="../abbozza-calliope/dist/abbozza-calliope.jar"/>
-        </copy>
-    </target>
-    
+    -->     
     
     <target name="-pre-jar">
+        <copy todir="build/classes/lib/">
+            <file file="../abbozza-calliope/dist/abbozza-calliope.jar"/>
+        </copy>
+
         <copy todir="build/classes/de/uos/inf/did/abbozza/core/">
             <file file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/core/AbbozzaLocale.class"/>
             <file file="../abbozza-common/build/classes/de/uos/inf/did/abbozza/core/AbbozzaLogger.class"/>
@@ -108,5 +106,13 @@
         <jar destfile="build/classes/lib/buildbase.jar">
             <fileset dir="buildsystem/"/>
         </jar>
+        
+        <copy todir="build/classes/lib/" verbose="true" overwrite="true">
+            <fileset dir="../abbozza-calliope/lib/"/>
+        </copy>
+        <copy todir="build/classes/bin/" verbose="true" overwrite="true">
+            <fileset dir="../abbozza-calliope/bin/"/>
+        </copy>
+        
     </target>
 </project>

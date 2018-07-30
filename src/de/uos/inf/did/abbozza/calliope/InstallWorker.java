@@ -188,7 +188,7 @@ public class InstallWorker extends SwingWorker<String, String> {
         /**
          * 7th step: copy jars and script from installerJar to their locations
          */
-        installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
+        // installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
 
         // buildbase
         publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/buildbase.jar"));
@@ -233,7 +233,7 @@ public class InstallWorker extends SwingWorker<String, String> {
         }
 
         zip = new ZipFile(installDir + "/tools.zip");
-        if (zip != null) {
+        if (zip != null)  {
             try {
                 int progress = 0;
                 int progressMax = zip.size();
@@ -272,14 +272,11 @@ public class InstallWorker extends SwingWorker<String, String> {
 
         // Scripts
         publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
-        publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMicroPython.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.sh", installDir + "/bin/abbozzaMicroPython.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMicroPython.bat", installDir + "/bin/abbozzaMicroPython.bat");
+        installTool.copyFromJar(installerJar, "bin/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
+        installTool.copyFromJar(installerJar, "bin/abbozzaC.bat", installDir + "/bin/abbozzaC.bat");
         publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaMonitor.[sh|bat]"));
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
-        installTool.copyFromJar(installerJar, "scripts/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
+        installTool.copyFromJar(installerJar, "bin/abbozzaMonitor.sh", installDir + "/bin/abbozzaMonitor.sh");
+        installTool.copyFromJar(installerJar, "bin/abbozzaMonitor.bat", installDir + "/bin/abbozzaMonitor.bat");
 
         // Icons
         publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/abbozza_icon_white"));
