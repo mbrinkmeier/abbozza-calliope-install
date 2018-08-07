@@ -42,7 +42,7 @@ public class InstallWorker extends SwingWorker<String, String> {
     private Document msgDoc;
     private boolean globalInstall;
     private AbbozzaLoggingFrame logFrame;
-    
+
     public InstallWorker(AbbozzaLoggingFrame frame, JarFile jar, InstallTool tool, String userDir, String sketchbook, String browser, Document doc, boolean global) {
         userInstallDir = userInstallDir = new File(installTool.expandPath(userDir));
         installerJar = jar;
@@ -53,7 +53,7 @@ public class InstallWorker extends SwingWorker<String, String> {
         globalInstall = global;
         logFrame = frame;
     }
-    
+
     /**
      *
      * @param msgs The published nessages
@@ -62,21 +62,25 @@ public class InstallWorker extends SwingWorker<String, String> {
     protected void process(List<String> msgs) {
         for (String msg : msgs) {
             try {
-                if ( msg.equals("|")) {
-                    String t = msgDoc.getText(msgDoc.getLength()-1,1);
-                    msgDoc.remove(msgDoc.getLength()-1,1);
+                if (msg.equals("|")) {
+                    String t = msgDoc.getText(msgDoc.getLength() - 1, 1);
+                    msgDoc.remove(msgDoc.getLength() - 1, 1);
                     char c = t.charAt(0);
                     switch (c) {
-                        case '|' : c = '/';
-                                   break;
-                        case '/' : c = '-';
-                                   break;
-                        case '-' : c = '\\';
-                                   break;
-                        case '\\' : c = '|';
-                                   break;
+                        case '|':
+                            c = '/';
+                            break;
+                        case '/':
+                            c = '-';
+                            break;
+                        case '-':
+                            c = '\\';
+                            break;
+                        case '\\':
+                            c = '|';
+                            break;
                     }
-                    msgDoc.insertString(msgDoc.getLength(), "" + c , null);
+                    msgDoc.insertString(msgDoc.getLength(), "" + c, null);
                 } else {
                     msgDoc.insertString(msgDoc.getLength(), msg + "\n", null);
                 }
@@ -84,14 +88,14 @@ public class InstallWorker extends SwingWorker<String, String> {
             }
         }
     }
-    
+
     /**
      *
      * @throws Exception thrown is exection occurred during execution
      */
     @Override
     protected String doInBackground() throws Exception {
-        
+
         Document msgDoc = null;
         publish("\n\n\n" + AbbozzaLocale.entry("MSG.STARTING_INSTALLATION"));
 
@@ -189,7 +193,6 @@ public class InstallWorker extends SwingWorker<String, String> {
          * 7th step: copy jars and script from installerJar to their locations
          */
         // installTool.copyDirFromJar(installerJar, "lib/srecord/", installDir + "/lib/srecord/");
-
         // buildbase
         publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/lib/buildbase.jar"));
         installTool.copyFromJar(installerJar, "lib/buildbase.jar", installDir + "/lib/buildbase.jar");
@@ -228,13 +231,9 @@ public class InstallWorker extends SwingWorker<String, String> {
 
         try {
             installTool.copyFromJar(installerJar, "tools.zip", installDir + "/tools.zip");
-        } catch (Exception ex) {
-            publish("tools.zip not in archive");
-        }
-
-        zip = new ZipFile(installDir + "/tools.zip");
-        if (zip != null)  {
-            try {
+            zip = new ZipFile(installDir + "/tools.zip");
+            
+            if (zip != null) {
                 int progress = 0;
                 int progressMax = zip.size();
                 Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
@@ -243,14 +242,13 @@ public class InstallWorker extends SwingWorker<String, String> {
                     ZipEntry entry = entries.nextElement();
                     String name = entry.getName();
                     progress++;
-                    
+
                     // publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/" + name));
                     File target = new File(installDir + "/" + name);
                     setProgress(progress * 100 / progressMax);
-                    
+
                     // publish(AbbozzaLocale.entry("MSG.WRITING", name));
                     // publish("|");
-
                     if (entry.isDirectory()) {
                         target.mkdir();
                     } else {
@@ -265,11 +263,17 @@ public class InstallWorker extends SwingWorker<String, String> {
                     File exef = new File(installDir + "/" + exe);
                     exef.setExecutable(true);
                 }
-            } catch (Exception ex) {
-                publish(ex.getLocalizedMessage());
+            } else {
+                publish("tools.zip not in archive!");
+                File toolsDir = new File(installDir + "/tools");
+                if ( !toolsDir.exists() ) {
+                    publish("Tools not installed!");
+                }
             }
+        } catch (Exception ex) {
+            publish(ex.getLocalizedMessage());
         }
-
+        
         // Scripts
         publish(AbbozzaLocale.entry("MSG.WRITING", installDir + "/bin/abbozzaC.[sh|bat]"));
         installTool.copyFromJar(installerJar, "bin/abbozzaC.sh", installDir + "/bin/abbozzaC.sh");
@@ -428,15 +432,13 @@ public class InstallWorker extends SwingWorker<String, String> {
                 }
             }
         }
-        */
-        
+         */
         publish(AbbozzaLocale.entry("MSG.SUCCESS"));
-        
-        logFrame.enableButton();          
-        
+
+        logFrame.enableButton();
+
         return "";
     }
-
 
     private boolean createDir(String path, Document msgDoc) {
         File buildDir = new File(path);
@@ -449,7 +451,6 @@ public class InstallWorker extends SwingWorker<String, String> {
         return true;
     }
 
-    
     private boolean createFile(String path, Document msgDoc) {
         try {
             File file = new File(path);
@@ -462,6 +463,4 @@ public class InstallWorker extends SwingWorker<String, String> {
         }
     }
 
-
-    
 }
