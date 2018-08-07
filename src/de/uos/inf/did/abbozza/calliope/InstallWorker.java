@@ -229,10 +229,17 @@ public class InstallWorker extends SwingWorker<String, String> {
 
         ZipFile zip = null;
 
-        try {
-            installTool.copyFromJar(installerJar, "tools.zip", installDir + "/tools.zip");
+        if (!installTool.copyFromJar(installerJar, "tools.zip", installDir + "/tools.zip")) {
+            publish("... tools.zip not found in " + installerJar);
+            publish("... Checking if tools.zip exists in " + installDir);
+        }
+        
+        File zipFile = new File(installDir + "/tools.zip");
+        if (zipFile.exists()) {
+            publish("... Extracting " + installDir + "/tools.zip");
+
             zip = new ZipFile(installDir + "/tools.zip");
-            
+
             if (zip != null) {
                 int progress = 0;
                 int progressMax = zip.size();
@@ -255,7 +262,6 @@ public class InstallWorker extends SwingWorker<String, String> {
                         Files.copy(zip.getInputStream(entry), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
-
                 publish(AbbozzaLocale.entry("MSG.SET_PERMISSIONS"));
                 BufferedReader execs = new BufferedReader(new FileReader(installDir + "/tools/.executables"));
                 while (execs.ready()) {
@@ -263,15 +269,13 @@ public class InstallWorker extends SwingWorker<String, String> {
                     File exef = new File(installDir + "/" + exe);
                     exef.setExecutable(true);
                 }
-            } else {
-                publish("tools.zip not in archive!");
-                File toolsDir = new File(installDir + "/tools");
-                if ( !toolsDir.exists() ) {
-                    publish("Tools not installed!");
-                }
             }
-        } catch (Exception ex) {
-            publish(ex.getLocalizedMessage());
+        } else {
+            publish("... No tools.zip in " + installDir + ". Checking for " +installDir + "/tools ..");
+            File toolsDir = new File(installDir + "/tools");
+            if (!toolsDir.exists()) {
+                publish("Tools not installed!");
+            }
         }
         
         // Scripts
